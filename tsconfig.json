@@ -42,6 +42,10 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+<<<<<<< HEAD
   },
   "include": ["src"]
+=======
+  }
+>>>>>>> e8803b7d5a8c0f134a686822c2befc487e040177
 }

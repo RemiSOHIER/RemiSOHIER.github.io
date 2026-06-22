@@ -20,7 +20,6 @@ if(canvas){
 //Optimized for [-10000:10000] coordinates maximum
 
 let camera:Vector2 = new Vector2();
-<<<<<<< HEAD
 let targetCamera:Vector2 = new Vector2();//actually not used
 
 let pages:Page[] = []
@@ -47,39 +46,11 @@ async function Init() {
     pages = pagesFound;
     page = Object.assign(new Page(), pages[0]);
     if(!destinationsBar) return;
-=======
-let targetCamera:Vector2 = new Vector2();
-const res = await fetch("../data/pageDestination.json");
-const pageDestination:Page[]|undefined = await res.json();
-if(pageDestination == undefined) throw new Error("pages list not found");
-let pages:Page[] = Object.assign([], pageDestination.map((p:Page)=>{
-    Object.assign(new Page(), p);
-    Object.assign(new Star(), p.star);
-    p.star = new Star(
-        p.star.position, 
-        p.star.temperature, 
-        p.star.intensity, 
-        p.star.color, 
-        p.star.radius
-    );
-    p.star.Init()
-    return p;
-}));
-let page:Page = Object.assign(new Page(), pages[0]);
-
-if(destinationsBar){
->>>>>>> e8803b7d5a8c0f134a686822c2befc487e040177
     destinationsBar.innerHTML = "";
     pages.forEach((p:Page)=>{
         destinationsBar.innerHTML += `<button onClick="GoTo('${p.name}')">${p.name}</button>`;
     })
-<<<<<<< HEAD
     if(!world) return;
-=======
-}
-
-if(world){
->>>>>>> e8803b7d5a8c0f134a686822c2befc487e040177
     InitWorld();
     window.addEventListener("resize", ()=>{
         InitWorld();

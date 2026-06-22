@@ -1,0 +1,21 @@
+{
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "vite": "^6.4.3"
+  },
+  "name": "portfoliogit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "serve": "npx serve",
+    "compile": "npx tsc",
+    "watch": "tsc --watch",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

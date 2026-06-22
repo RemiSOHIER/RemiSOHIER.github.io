@@ -27,7 +27,7 @@ let page:Page = new Page();
 Init();
 
 async function Init() {
-    const res = await fetch("../data/pageDestination.json");
+    const res = await fetch("/data/pageDestination.json");
     const pageDestination = await res.json();
 
     if (pageDestination == undefined)throw new Error("pages list not found");

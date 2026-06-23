@@ -2,14 +2,12 @@ import {Vector2} from "./objects"
 export {};
 
 declare global {
-    // interface Window{
-    //     cameraPosition:Vector2;
-    //     GoTo:(pageName:string, openInstantly:boolean)=>void;
-    //     OpenPageAnimation:(onComplete?:()=>void)=>void;
-    //     ClosePageAnimation:(onComplete?:()=>void)=>void;
-    // }
+    var world:HTMLElement;
+    var destinationsBar:HTMLElement;
+    /** @description Position de la camera (permettant de 
+     * calculer l'affichage du world et des astres) */
     var cameraPosition:Vector2;
-    var GoTo:(pageName:string, openInstantly:boolean)=>void;
+    var Route:(pageName:string, openInstantly:boolean)=>void;
     var OpenPageAnimation:(onComplete?:()=>void)=>void;
     var ClosePageAnimation:(onComplete?:()=>void)=>void;
 }

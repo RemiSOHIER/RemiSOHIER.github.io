@@ -40,7 +40,7 @@
         }
     },
     {
-        "name": "test max distance",
+        "name": "test-max-distance",
         "star": {
             "position": {"x": 10000, "y": 10000},
             "temperature": 6000,
@@ -50,7 +50,7 @@
         }
     },
     {
-        "name": "test destination lointaine",
+        "name": "test-destination-lointaine",
         "star": {
             "position": {"x": -5000000, "y": 5000000},
             "temperature": 2000,

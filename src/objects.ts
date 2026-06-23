@@ -8,31 +8,14 @@ export class DataText{
     text:string = "";
 }
 
-export class Vector2{
-    x:number = 0;
-    y:number = 0;
-}
-export class Vector extends Vector2{
-    z:number = 0;
-}
-
-// declare global {
-//     interface Window{
-//         cameraPosition:Vector2;
-//         GoTo:(pageName:string, openInstantly:boolean)=>void;
-//         OpenPageAnimation:(onComplete?:()=>void)=>void;
-//         ClosePageAnimation:(onComplete?:()=>void)=>void;
-//     }
-// }
-
-export class Chunk<T>{
-    position:Vector2 = new Vector2();
-    dataStored:T[] = []
+export class Link{
+    name:string = "";
+    url:string = "";
+    icon:string = "";
 }
 
 export class Page{
     name:string = "";
-    // position:Vector2 = new Vector2();
     star:Star = new Star();
 }
 
@@ -40,6 +23,48 @@ export class Color{
     r:number = 255;
     g:number = 255;
     b:number = 255;
+    constructor(r?:number, g?:number, b?:number){
+        this.r = r ?? 255;
+        this.g = g ?? 255;
+        this.b = b ?? 255;
+    }
+}
+
+export class Vector2{
+    x:number = 0;
+    y:number = 0;
+    constructor(x?:number, y?:number){
+        this.x = x ?? 0;
+        this.y = y ?? 0;
+    }
+}
+export class Vector extends Vector2{
+    z:number = 0;
+    constructor(x?:number, y?:number, z?:number){
+        super(x, y)
+        this.z = z ?? 0;
+    }
+}
+export function AddVector(v1:Vector2|Vector, v2:Vector2|Vector){
+    if(v1 instanceof Vector || v2 instanceof Vector){
+        const v1z:number = v1 instanceof Vector?v1.z:0;
+        const v2z:number = v2 instanceof Vector?v2.z:0;
+        return new Vector(
+            v1.x + v2.x, 
+            v1.y + v2.y,
+            v1z + v2z
+        );
+    }else if(v1 instanceof Vector2 && v2 instanceof Vector2){
+        return new Vector2(
+            v1.x + v2.x, 
+            v1.y + v2.y,
+        )
+    }
+}
+
+export class Chunk<T>{
+    position:Vector2 = new Vector2();
+    dataStored:T[] = []
 }
 
 export class Star{
@@ -65,7 +90,7 @@ export class Star{
         this.position.z = Math.random() * 0.25;
         this.Init();
     }
-    temperatureToRGB(kelvin: number):void{
+    private temperatureToRGB(kelvin: number):void{
         const temp = kelvin / 100;
         let red:number;
         let green:number;
@@ -100,7 +125,7 @@ export class Star{
         this.color.g = Math.round(green);
         this.color.b = Math.round(blue);
     }
-    temperatureToIntensity():void{
+    private temperatureToIntensity():void{
         // normalisation 2000K → 12000K
         const t = (this.temperature - 2000) / (12000 - 2000);
         // courbe pour éviter linéaire moche

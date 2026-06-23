@@ -19,8 +19,8 @@ if(canvas){
 
 //Optimized for [-10000:10000] coordinates maximum
 
-let camera:Vector2 = new Vector2();
-let targetCamera:Vector2 = new Vector2();//actually not used
+// let camera:Vector2 = new Vector2();
+// let targetCamera:Vector2 = new Vector2();//actually not used
 
 let pages:Page[] = []
 let page:Page = new Page();
@@ -31,7 +31,7 @@ async function Init() {
     const pageDestination = await res.json();
 
     if (pageDestination == undefined)throw new Error("pages list not found");
-    let pagesFound = Object.assign([], pageDestination.map((p: Page) => {
+    const pagesFound = Object.assign([], pageDestination.map((p: Page) => {
         const page = Object.assign(new Page(), p);
         page.star = new Star(
             p.star.position,
@@ -82,27 +82,27 @@ function InitWorld(){
             0 0 25px rgba(${colorOuter.r},${colorOuter.g},${colorOuter.b},0.3),
             0 0 60px rgba(${colorOuter.r},${colorOuter.g},${colorOuter.b},0.15);"></div>`;
     });
-    GoTo(page.name, true);
+    window.GoTo(page.name, true);
 }
 
-function GoTo(pageName:string, openInstantly:boolean = false):void{
+globalThis.GoTo = (pageName:string, openInstantly:boolean = false):void{
     const pageFound:Page|undefined = pages.find((p:Page)=>p.name == pageName);
     if(!pageFound) return;
     page = pageFound;
-    targetCamera = page.star.position;
+    // targetCamera = page.star.position;
     if(openInstantly){
-        OpenPageAnimation();
+        window.OpenPageAnimation();
         UpdatePageData();
     } else {
-        ClosePageAnimation(()=>{
+        window.ClosePageAnimation(()=>{
             GoToWorldCoordinateAnimation(page.star.position, 3000, ()=>{
-                OpenPageAnimation();
+                window.OpenPageAnimation();
                 UpdatePageData();
             });
         });
     }
 }
-(window as any).GoTo = GoTo;
+// (window as any).GoTo = GoTo;
 
 function UpdatePageData():void{
     if(!pageBalise || !world) return;
@@ -114,7 +114,6 @@ function UpdatePageData():void{
         height: ${page.star.radius}px;"></div>
     <section>
         <h3>${page.name}</h3>
-        <h3 class="warn">Portfolio en cours d'élaboration</h3>
 
         Lorem ipsum dolor sit amet consectetur 
         adipisicing elit. Dolores voluptates sed 
@@ -130,8 +129,10 @@ function GoToWorldCoordinateAnimation(
     duration:number = 1200,
     onComplete?:()=>void
 ): void {
-    const startX = camera.x;
-    const startY = camera.y;
+    // const startX = camera.x;
+    // const startY = camera.y;
+    const startX = spaceBackground.cameraPosition.x;
+    const startY = spaceBackground.cameraPosition.y;
     const dx = destination.x - startX;
     const dy = destination.y - startY;
     const startTime = performance.now();
@@ -139,9 +140,13 @@ function GoToWorldCoordinateAnimation(
         const t = Math.min((time - startTime) / duration, 1);
         // easing smooth (cinématique)
         const ease = t * t * (3 - 2 * t);
-        camera.x = startX + dx * ease;
-        camera.y = startY + dy * ease;
-        spaceBackground.cameraPosition = camera
+        // spaceBackground.cameraPosition.x = startX + dx * ease;
+        // spaceBackground.cameraPosition.y = startY + dy * ease;
+        globalThis.cameraPosition.x = startX + dx * ease;
+        globalThis.cameraPosition.y = startY + dy * ease;
+        // camera.x = startX + dx * ease;
+        // camera.y = startY + dy * ease;
+        // spaceBackground.cameraPosition = camera
         renderUI()
         if (t < 1) {
             requestAnimationFrame(animate);
@@ -152,26 +157,44 @@ function GoToWorldCoordinateAnimation(
     requestAnimationFrame(animate);
 }
 
-function ClosePageAnimation(onComplete?:()=>void):void{
+globalThis.ClosePageAnimation = (onComplete?:()=>void):void{
     if (!pageBalise) return;
     pageBalise.style.transform = "scale(0)";
     setTimeout(() => {
         if (onComplete) onComplete();
     }, 500);
 }
-(window as any).ClosePageAnimation = ClosePageAnimation;
+// (window as any).ClosePageAnimation = ClosePageAnimation;
 
-function OpenPageAnimation(onComplete?:()=>void):void{
+globalThis.OpenPageAnimation = (onComplete?:()=>void):void{
     if(!pageBalise) return;
     pageBalise.style.transform = "scale(1)"
     setTimeout(() => {
         if (onComplete) onComplete();
     }, 500);
 }
-(window as any).OpenPageAnimation = OpenPageAnimation;
+// (window as any).OpenPageAnimation = OpenPageAnimation;
 
 function renderUI():void{
-    world!.style.transform = `
-        translate(${-camera.x}px, ${-camera.y}px)
-    `;
+    // world!.style.transform = `translate(${-camera.x}px, ${-camera.y}px)`;
+    world!.style.transform = `translate(${-spaceBackground.cameraPosition.x}px, ${-spaceBackground.cameraPosition.y}px)`;
 }
+
+
+// declare global {
+//     cameraPosition:Vector2;
+//     GoTo:(pageName:string, openInstantly:boolean)=>void;
+//     OpenPageAnimation:(onComplete?:()=>void)=>void;
+//     ClosePageAnimation:(onComplete?:()=>void)=>void;
+//     interface Window{
+//     }
+// }
+
+// declare global {
+//     interface Window{
+//         cameraPosition:Vector2;
+//         GoTo:(pageName:string, openInstantly:boolean)=>void;
+//         OpenPageAnimation:(onComplete?:()=>void)=>void;
+//         ClosePageAnimation:(onComplete?:()=>void)=>void;
+//     }
+// }

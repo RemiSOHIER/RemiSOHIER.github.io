@@ -5,9 +5,9 @@ export class Space{
     ctx:CanvasRenderingContext2D;
     starChunks:Chunk<Star>[] = [];
     private generationQueue:Vector2[] = [];
-    private chunkPerFrame:number = 10;
-    chunkSize:number = 5000;
-    starNumberByChunks:number = 2000;
+    private chunkPerFrame:number = 5;
+    chunkSize:number = 1000;
+    starNumberByChunks:number = 200;
     cameraPosition:Vector2 = new Vector2();
     constructor(canvas:HTMLCanvasElement){
         this.canvas = canvas;
@@ -25,7 +25,7 @@ export class Space{
         this.update();
     }
     private async GenerateChunks(){
-        const chunkRowNumber:number = 50;
+        const chunkRowNumber:number = 20;
         const halfCoord:number = Math.floor(chunkRowNumber / 2);
         for (let x = 0; x < chunkRowNumber; x++) {
             for (let y = 0; y < chunkRowNumber; y++) {
@@ -70,7 +70,7 @@ export class Space{
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         const currentChunkX = Math.floor(this.cameraPosition.x / this.chunkSize);
         const currentChunkY = Math.floor(this.cameraPosition.y / this.chunkSize);
-        const renderDistance = 5; // ou 3, 4 selon densité
+        const renderDistance = 2; // ou 3, 4 selon densité
         for (let i = 0; i < this.starChunks.length; i++) {
             const chunk:Chunk<Star>|undefined = this.starChunks[i];
             if(!chunk) continue;
@@ -80,6 +80,12 @@ export class Space{
             ) {
                 continue;
             }
+            // console.table({
+            //     positionX: chunk.position.x,
+            //     positionY: chunk.position.y,
+            //     x: (chunk.position.x - currentChunkX), 
+            //     y: (chunk.position.y - currentChunkY)
+            // })
             this.RenderStars(chunk);
         }
     }

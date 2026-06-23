@@ -16,6 +16,15 @@ export class Vector extends Vector2{
     z:number = 0;
 }
 
+// declare global {
+//     interface Window{
+//         cameraPosition:Vector2;
+//         GoTo:(pageName:string, openInstantly:boolean)=>void;
+//         OpenPageAnimation:(onComplete?:()=>void)=>void;
+//         ClosePageAnimation:(onComplete?:()=>void)=>void;
+//     }
+// }
+
 export class Chunk<T>{
     position:Vector2 = new Vector2();
     dataStored:T[] = []

@@ -1,7 +1,13 @@
-import { Vector2, Vector, Page, Star, Color } from "./objects";
+import { Vector2, Vector, Page, Star, Color, DataText } from "./objects";
 import { Space } from "./canvasEffect"
 
-const title = "Portfolio de Rémi";
+const title = "Rémi SOHIER";
+const lorem = `Lorem ipsum dolor sit amet consectetur 
+            adipisicing elit. Dolores voluptates sed 
+            molestiae nam placeat consequatur temporibus 
+            culpa repellendus quasi blanditiis, minima 
+            error sint aperiam hic fugit eius nulla, 
+            ipsum repellat.`;
 const destinationsBar = document.getElementById("destinationsBar")
 const app = document.getElementById("app");
 const world = document.getElementById("world");
@@ -53,17 +59,16 @@ async function Init() {
     errorPage.star = new Star(new Vector(0, -3000, 0), 30000, 1, new Color(), 75);
     errorPage.star.Init();
     pages.push(errorPage);
+    UpdageDestinationBar();
     // page = Object.assign(new Page(), pages[1]);
     if(!destinationsBar) return;
     destinationsBar.innerHTML = "";
-    pages.forEach((p:Page)=>{
-        destinationsBar.innerHTML += `<button onClick="Route('${p.name}')">${p.name}</button>`;
-    })
     if(!world) return;
     InitWorld();
     window.addEventListener("resize", ()=>{
         InitWorld();
     })
+    GoTo(true);
 }
 
 function InitWorld(){
@@ -91,29 +96,30 @@ function InitWorld(){
             0 0 25px rgba(${colorOuter.r},${colorOuter.g},${colorOuter.b},0.3),
             0 0 60px rgba(${colorOuter.r},${colorOuter.g},${colorOuter.b},0.15);"></div>`;
     });
-    world.innerHTML += `<div class="star" style="
-    width:10000px;height:10000px;background:red;
-    top:calc(100000-5000)px;left:calc(100000-5000)px;"></div>`;
-    Route(window.location.pathname, true);
 }
 
-/** @description Permet de définir le chemin via l'url */
+/** @description Permet de définir le chemin via l'url,
+ * utilisation d'une url hashée afin d'avoir toutes les url qui 
+ * retournent le "index.html" pour une github page */
 function Route(pageName:string, openInstantly:boolean = false){
-    if(window.location.pathname != pageName){
-        if(pageName == "Accueil" || pageName == "/"){
-            pageName = "/";
+    if(window.location.hash.replace(/^#\/?/, "") != pageName){
+        if(pageName == "Accueil"){
+            pageName = "";
+            // history.pushState({}, "", "");
         }
-        history.pushState({}, "", pageName);
+        window.location.hash = "/" + pageName;
     }
     GoTo(openInstantly);
 }
 globalThis.Route = Route;
 
+window.addEventListener("hashchange", ()=>{GoTo();});
+
 /** @description Débute les animations de traveling depuis 
  * la position actuelle de la camera jusqu'à la position de 
  * destination fourni dans les données de la page*/
 function GoTo(openInstantly:boolean = false):void{
-    let pageName:string = decodeURIComponent(window.location.pathname).replace("/", "");
+    let pageName:string = decodeURIComponent(window.location.hash).replace(/^#\/?/, "");
     if(pageName == "" || pageName == "/") pageName = "Accueil";
     const pageFound:Page|undefined = pages.find((p:Page)=>p.name.toLowerCase() == pageName.toLowerCase());
     if(pageFound) {
@@ -122,6 +128,11 @@ function GoTo(openInstantly:boolean = false):void{
         const pageError:Page|undefined = pages.find((p:Page)=>p.name.toLowerCase() == "erreur");
         if(!pageError) throw new Error("La page d'érreur est introuvable");
         page = pageError;
+    }
+    if(page.name == "Accueil"){
+        document.title = title;
+    }else{
+        document.title = title+" - "+page.name;
     }
     if(openInstantly){
         OpenPageAnimation();
@@ -137,24 +148,47 @@ function GoTo(openInstantly:boolean = false):void{
     }
 }
 
-function UpdatePageData():void{
+function UpdageDestinationBar():void{
+    if(!destinationsBar) return;
+    destinationsBar.innerHTML = "";
+    pages.forEach((p:Page)=>{
+        if(page.name != p.name){
+            destinationsBar.innerHTML += `<button onClick="Route('${p.name}')">${p.name}</button>`;
+        }
+    })
+}
+
+async function UpdatePageData():Promise<void>{
     if(!pageBalise || !world) return;
     const left = window.innerWidth / 2 - page.star.radius / 2
     const top = window.innerHeight / 2 - page.star.radius / 2
-    pageBalise.innerHTML = `
-    <div class="eclipse" style="top:${top}px;left:${left}px;
-        width: ${page.star.radius}px;
-        height: ${page.star.radius}px;"></div>
-    <section>
-        <h3>${page.name}</h3>
-
-        Lorem ipsum dolor sit amet consectetur 
-        adipisicing elit. Dolores voluptates sed 
-        molestiae nam placeat consequatur temporibus 
-        culpa repellendus quasi blanditiis, minima 
-        error sint aperiam hic fugit eius nulla, 
-        ipsum repellat.
-    </section>`;
+    let dataTexts:DataText[]|null = null;
+    try {
+        const module = await import(`/data/${page.name.toLowerCase()}.js`);
+        dataTexts = module.default ?? null;
+    } catch (e) {
+        dataTexts = null;
+    }
+    if(dataTexts != null){
+        pageBalise.innerHTML = `
+        <div class="eclipse" style="top:${top}px;left:${left}px;
+            width: ${page.star.radius}px;
+            height: ${page.star.radius}px;"></div>
+        <section>
+            <h3>${page.name}</h3>
+            ${page.GetDataTextString(dataTexts)}
+        </section>`;
+    }else{
+        pageBalise.innerHTML = `
+        <div class="eclipse" style="top:${top}px;left:${left}px;
+            width: ${page.star.radius}px;
+            height: ${page.star.radius}px;"></div>
+        <section>
+            <h3>${page.name}</h3>
+            ${lorem}
+        </section>`;
+    }
+    UpdageDestinationBar();
 }
 
 /** @description Effectue l'animation de fermeture de la page */

@@ -1,5 +1,8 @@
 html{
     background: #050816;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 body {
     color: white;
@@ -52,8 +55,9 @@ button:hover{
     left: 0px;
     max-width: 100%;
     max-height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
+    /* overflow-x: hidden;
+    overflow-y: auto; */
     transform: scale(0);
     transition: all 0.5s;
 }
@@ -78,6 +82,8 @@ section{
     border: 1px solid #151b39;
     min-height: 400px;
     min-width: 80%;
+    overflow-x: hidden;
+    overflow-y: auto;
     /* test */
     height: 5000px;
 }
@@ -88,4 +94,25 @@ section{
     text-align: center;
     color: red;
     background: orange;
+}
+.dataText{
+
+}
+
+/* largeur de la scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+/* fond de la piste */
+::-webkit-scrollbar-track {
+    background: #111;
+}
+/* poignée (thumb) */
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+/* hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #666;
 }

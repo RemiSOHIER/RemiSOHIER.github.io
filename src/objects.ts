@@ -3,7 +3,6 @@ export enum TextType{
 }
 
 export class DataText{
-    type:TextType = TextType.infos;
     title:string = "";
     text:string = "";
 }
@@ -17,19 +16,21 @@ export class Link{
 export class Page{
     name:string = "";
     star:Star = new Star();
-}
-
-export class Color{
-    r:number = 255;
-    g:number = 255;
-    b:number = 255;
-    constructor(r?:number, g?:number, b?:number){
-        this.r = r ?? 255;
-        this.g = g ?? 255;
-        this.b = b ?? 255;
+    constructor(){}
+    public GetDataTextString(dataTexts:DataText[]):string{
+        if(dataTexts.length == 0) return "";
+        let innerHtml:string = "";
+        dataTexts.forEach((d:DataText)=>{
+            innerHtml += `<div class="dataText">
+                <h3>${d.title}</h3>
+                <div>${d.text}</div>
+            </div>`
+        })
+        return innerHtml;
     }
 }
 
+//#region MATH
 export class Vector2{
     x:number = 0;
     y:number = 0;
@@ -45,6 +46,7 @@ export class Vector extends Vector2{
         this.z = z ?? 0;
     }
 }
+
 export function AddVector(v1:Vector2|Vector, v2:Vector2|Vector){
     if(v1 instanceof Vector || v2 instanceof Vector){
         const v1z:number = v1 instanceof Vector?v1.z:0;
@@ -65,6 +67,18 @@ export function AddVector(v1:Vector2|Vector, v2:Vector2|Vector){
 export class Chunk<T>{
     position:Vector2 = new Vector2();
     dataStored:T[] = []
+}
+//#endregion MATH
+
+export class Color{
+    r:number = 255;
+    g:number = 255;
+    b:number = 255;
+    constructor(r?:number, g?:number, b?:number){
+        this.r = r ?? 255;
+        this.g = g ?? 255;
+        this.b = b ?? 255;
+    }
 }
 
 export class Star{

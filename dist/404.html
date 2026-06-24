@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<!-- Fallback router: ramène a l'index.html en cas d'érreur d'url -->
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+</head>
+<script>
+(function() {
+    const path = window.location.pathname;
+    let cleanPath = path.replace("/", "");
+    // transforme /Projets -> #/Projets
+    const redirect = "/" + cleanPath;
+    window.location.replace("/#" + redirect);
+})();
+</script>

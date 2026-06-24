@@ -1,11 +1,10 @@
-import {Vector, Color, Star, Vector2, Chunk} from "./objects"
+import {Vector, Color, Star, Vector2, Chunk, AddVector} from "./objects"
 
 export class Space{
     canvas!:HTMLCanvasElement;
     ctx:CanvasRenderingContext2D;
     starChunks:Chunk<Star>[] = [];
     private generationQueue:Vector2[] = [];
-    private renderQueue:Vector2[] = [];
     private chunkPerFrame:number = 5;
     private updateOnProgress:boolean = false;
     chunkSize:number = 1000;
@@ -33,6 +32,13 @@ export class Space{
         destinationsBar.style.display = "none";
         this.updateOnProgress = true;
         this.update();
+        if(duration == 0){
+            cameraPosition.x += destination.x;
+            cameraPosition.y += destination.y;
+            this.renderUI();
+            if (onComplete) onComplete();
+            this.updateOnProgress = false;
+        }
         const startX = cameraPosition.x;
         const startY = cameraPosition.y;
         const dx = destination.x - startX;
@@ -59,6 +65,8 @@ export class Space{
         if(!world) return;
         world!.style.transform = `translate(${-cameraPosition.x}px, ${-cameraPosition.y}px)`;
     }
+
+//#region Generation
     private async GenerateChunks():Promise<void>{
         const chunkRowNumber:number = 10;
         const halfCoord:number = Math.floor(chunkRowNumber / 2);
@@ -95,11 +103,12 @@ export class Space{
         chunk.dataStored = stars;
         this.starChunks.push(chunk);
     }
+//#endregion Generation
+
     private update = ()=>{
         this.ProcessGenerationQueue();
         this.PreRender();
-        this.Render();
-        if(this.updateOnProgress || this.renderQueue.length > 0){
+        if(this.updateOnProgress || this.generationQueue.length > 0){
             requestAnimationFrame(this.update);
         }
     };
@@ -119,15 +128,8 @@ export class Space{
             ) {
                 continue;
             }
-            this.renderQueue.push(chunk.position);
+            this.RenderStars(chunk);
         }
-    }
-    private Render():void{
-        this.starChunks.forEach((chunk:Chunk<Star>)=>{
-            if(this.renderQueue.includes(chunk.position)){
-                this.RenderStars(chunk);
-            }
-        });
     }
     private RenderStars(chunk:Chunk<Star>):void{
         chunk.dataStored.forEach((star:Star)=>{
@@ -140,10 +142,10 @@ export class Space{
             const x = star.position.x - camX;
             const y = star.position.y - camY;
             
-            if (
-                x < 0 || x > this.canvas.width ||
-                y < 0 || y > this.canvas.height
-            ) return;
+            // if (
+            //     x < 0 || x > this.canvas.width ||
+            //     y < 0 || y > this.canvas.height
+            // ) return;
             
             const intensity = star.intensity ?? 1;
             // variation réaliste
@@ -166,8 +168,8 @@ export class Space{
         })
     }
     private resize():void{
-        const dpr = window.devicePixelRatio || 1;
-        
+        // const dpr = window.devicePixelRatio || 1;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
         this.canvas.width = window.innerWidth * dpr;
         this.canvas.height = window.innerHeight * dpr;
 
@@ -176,5 +178,18 @@ export class Space{
 
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         this.ctx.scale(dpr, dpr);
+
+        // const dpr = window.devicePixelRatio || 1;
+
+        // const rect = document.documentElement.getBoundingClientRect();
+
+        // this.canvas.width = rect.width * dpr;
+        // this.canvas.height = rect.height * dpr;
+
+        // this.canvas.style.width = rect.width + "px";
+        // this.canvas.style.height = rect.height + "px";
+
+        // this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        // this.ctx.scale(dpr, dpr);
     }
 }

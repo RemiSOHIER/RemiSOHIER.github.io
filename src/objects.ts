@@ -1,7 +1,3 @@
-export enum TextType{
-    infos = "infos"
-}
-
 export class DataText{
     title:string = "";
     text:string = "";
@@ -13,6 +9,11 @@ export class Link{
     icon:string = "";
 }
 
+export class Projet{
+    link:Link = new Link();
+    dataTexts:DataText[] = [];
+}
+
 export class Page{
     name:string = "";
     star:Star = new Star();
@@ -20,10 +21,33 @@ export class Page{
     public GetDataTextString(dataTexts:DataText[]):string{
         if(dataTexts.length == 0) return "";
         let innerHtml:string = "";
-        dataTexts.forEach((d:DataText)=>{
+        dataTexts.forEach((d:DataText, index:number)=>{
             innerHtml += `<div class="dataText">
-                <h3>${d.title}</h3>
-                <div>${d.text}</div>
+                <h3 class="btn dataTextTitle" data-index="${index}">- ${d.title}</h3>
+                <div class="dataTextContent">${d.text}</div>
+            </div>`
+        })
+        return innerHtml;
+    }
+    // ---------------------------- à peaufiner
+    public GetLinkString(links:Link[]):string{
+        if(links.length == 0) return "";
+        let innerHtml:string = "";
+        links.forEach((d:Link, index:number)=>{
+            innerHtml += `<div class="dataText">
+                <a>${d.name}: </a>
+                <a href="${d.url}" target="_blank">${d.name}</a>
+            </div>`
+        })
+        return innerHtml;
+    }
+    // ----------------------------- à finir
+    public GetProjetString(projets:Projet[]):string{
+        if(projets.length == 0) return "";
+        let innerHtml:string = "";
+        projets.forEach((d:Projet, index:number)=>{
+            innerHtml += `<div class="dataText">
+
             </div>`
         })
         return innerHtml;

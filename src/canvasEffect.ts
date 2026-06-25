@@ -118,7 +118,10 @@ export class Space{
         const currentChunkX = Math.floor(cameraPosition.x / this.chunkSize);
         const currentChunkY = Math.floor(cameraPosition.y / this.chunkSize);
         const renderDistance = 2; // ou 3, 4 selon densité
-        // console.clear();
+        // ------------------ BUG A TROUVER----------------
+        //problème de calcul du chunk proche de la camera 
+        // (les chunks affichés sont constamment ceux proche 
+        // du zero absolu)
         for (let i = 0; i < this.starChunks.length; i++) {
             const chunk:Chunk<Star>|undefined = this.starChunks[i];
             if(!chunk) continue;

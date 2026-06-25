@@ -1,4 +1,4 @@
-import { Vector2, Vector, Page, Star, Color, DataText } from "./objects";
+import { Vector2, Vector, Page, Star, Color, DataText, Link, Projet } from "./objects";
 import { Space } from "./canvasEffect"
 
 const title = "Rémi SOHIER";
@@ -152,7 +152,7 @@ function UpdageDestinationBar():void{
     if(!destinationsBar) return;
     destinationsBar.innerHTML = "";
     pages.forEach((p:Page)=>{
-        if(page.name != p.name){
+        if(page.name != p.name && p.name != "Erreur"){
             destinationsBar.innerHTML += `<button onClick="Route('${p.name}')">${p.name}</button>`;
         }
     })
@@ -162,33 +162,54 @@ async function UpdatePageData():Promise<void>{
     if(!pageBalise || !world) return;
     const left = window.innerWidth / 2 - page.star.radius / 2
     const top = window.innerHeight / 2 - page.star.radius / 2
-    let dataTexts:DataText[]|null = null;
+    let datas:DataText[]|Link[]|Projet[]|null = null;
     try {
         const module = await import(`/data/${page.name.toLowerCase()}.js`);
-        dataTexts = module.default ?? null;
+        datas = module.default ?? null;
     } catch (e) {
-        dataTexts = null;
+        datas = null;
     }
-    if(dataTexts != null){
-        pageBalise.innerHTML = `
-        <div class="eclipse" style="top:${top}px;left:${left}px;
-            width: ${page.star.radius}px;
-            height: ${page.star.radius}px;"></div>
-        <section>
-            <h3>${page.name}</h3>
-            ${page.GetDataTextString(dataTexts)}
-        </section>`;
+    let titleHtml:string = "";
+    let contentHtml:string = "";
+    if(datas != null){
+        titleHtml = `<div id="title">${page.name}</div>`;
+        if(page.name == "Parcours"){
+            contentHtml = page.GetDataTextString(datas as DataText[]);
+        }
+        if(page.name == "Réseaux"){
+            contentHtml = page.GetLinkString(datas as Link[]);
+        }
+        if(page.name == "Projets"){
+            contentHtml = page.GetProjetString(datas as Projet[]);
+        }
     }else{
-        pageBalise.innerHTML = `
-        <div class="eclipse" style="top:${top}px;left:${left}px;
-            width: ${page.star.radius}px;
-            height: ${page.star.radius}px;"></div>
-        <section>
-            <h3>${page.name}</h3>
-            ${lorem}
-        </section>`;
+        titleHtml = ` <div id="title" class="warn">La page ${page.name} est en cours d'élaboration</div>`;
+        contentHtml = lorem
     }
+    pageBalise.innerHTML = `
+    <div class="eclipse" style="top:${top}px;left:${left}px;
+        width: ${page.star.radius}px;
+        height: ${page.star.radius}px;">
+    </div>
+    ${titleHtml}
+    <section>
+        <div id="content">
+            ${contentHtml}
+        </div>
+    </section>`;
+    InitPageEvent();
     UpdageDestinationBar();
+}
+
+function InitPageEvent(){
+    document.querySelectorAll(".dataTextTitle").forEach(title => {
+    title.addEventListener("click", () => {
+        const content = title.nextElementSibling;
+        if (content) {
+            content.classList.toggle("open");
+        }
+    });
+});
 }
 
 /** @description Effectue l'animation de fermeture de la page */

@@ -30,7 +30,7 @@ footer{
     flex-direction: row;
     justify-content: center;
 }
-button{
+button, .btn{
     margin: 5px;
     padding: 10px;
     border: none;
@@ -38,7 +38,7 @@ button{
     background-color: #659bff;
     transition: all 1s ease;
 }
-button:hover{
+button:hover, .btn:hover{
     cursor: pointer;
     background-color: #97bafc;
     box-shadow:
@@ -53,8 +53,8 @@ button:hover{
     align-items: center;
     top: 0px;
     left: 0px;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     /* overflow-x: hidden;
     overflow-y: auto; */
@@ -74,18 +74,36 @@ button:hover{
     opacity: 0.75
 }
 section{
-    margin: 10%;
-    padding: 10px;
-    /* background-color: #00082c; */
-    backdrop-filter: blur(2px);
-    border-radius: 10px;
-    border: 1px solid #151b39;
-    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 5% 100px 5%;
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    /* border: 1px solid #151b39; */
+    /* min-height: 80%; */
     min-width: 80%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     /* test */
     height: 5000px;
+    box-shadow:
+            0 0 5px #4d88f7,
+            0 0 10px #4d88f7;
+    >#content{
+        padding: 10px;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+}
+#title{
+    user-select: none;
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 20px;
+    box-shadow:
+            0 0 10px #4d88f7,
+            0 0 20px #4d88f7;
 }
 .warn{
     margin: 5px;
@@ -97,6 +115,26 @@ section{
 }
 .dataText{
 
+}
+.dataTextTitle {
+    user-select: none;
+    background-color: #0f1a4b;
+}
+.dataTextTitle:hover{
+    background-color: #182d8c;
+    box-shadow:
+            0 0 15px #182d8c,
+            0 0 30px #182d8c;
+}
+.dataTextContent {
+    font-size: large;
+    margin: 20px 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+.dataTextContent.open {
+    max-height: 1000px;
 }
 
 /* largeur de la scrollbar */
@@ -115,4 +153,9 @@ section{
 /* hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #666;
+}
+@media (max-width: 768px){
+    /* button, .btn{
+        width: ;
+    } */
 }

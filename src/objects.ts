@@ -1,56 +1,93 @@
-export class DataText{
+enum  DataType{
+    link = "link",
+    image = "image",
+    icon = "icon",
+    svg = "svg"
+}
+
+class DataBlock{
+    type:DataType = DataType.link;
+    name:string = "";
+    link:string = "";
+    /** @description Récupère le text data brut et le parse */
+    constructor(raw?:string) {
+        if (!raw) return;
+        const parts = raw.split(",");
+        for (const part of parts) {
+            const [key, ...value] = part.split(":");
+            if (!key || !value.length) continue;
+            const v = value.join(":").trim();
+            switch (key.trim()) {
+                case "type":
+                    this.type = v as DataType;
+                    break;
+                case "name":
+                    this.name = v;
+                    break;
+                case "link":
+                    this.link = v;
+                    break;
+            }
+        }
+    }
+}
+
+export class Data{
+    isClosable:boolean = false;
+    // type:DataType = DataType.text;
     title:string = "";
     text:string = "";
-}
-
-export class Link{
-    name:string = "";
-    url:string = "";
-    icon:string = "";
-}
-
-export class Projet{
-    link:Link = new Link();
-    dataTexts:DataText[] = [];
 }
 
 export class Page{
     name:string = "";
     star:Star = new Star();
     constructor(){}
-    public GetDataTextString(dataTexts:DataText[]):string{
-        if(dataTexts.length == 0) return "";
+    public GetDataString(data:Data[]):string{
+        if(data.length == 0) return "";
         let innerHtml:string = "";
-        dataTexts.forEach((d:DataText, index:number)=>{
-            innerHtml += `<div class="dataText">
-                <h3 class="btn dataTextTitle" data-index="${index}">- ${d.title}</h3>
-                <div class="dataTextContent">${d.text}</div>
-            </div>`
+        data.forEach((d:Data, index:number)=>{
+            let title:string = "";
+            let textData:string = this.ParseDatas(d.text);
+            if(d.isClosable){
+                if(d.title.length > 0){
+                    title = `<h3 class="btn dataTextTitle" data-index="${index}">- ${d.title}</h3>`
+                }
+                innerHtml += `<div class="dataText">
+                   ${title}
+                    <div class="dataTextContent">${textData}</div>
+                </div>`
+            }else{
+                if(d.title.length > 0){
+                    title = `<h3 class="dataTextTitle" data-index="${index}">- ${d.title}</h3>`
+                }
+                innerHtml += `<div class="dataText">
+                   ${title}
+                    <div class="dataTextContent.open">${textData}</div>
+                </div>`
+            }
         })
         return innerHtml;
     }
-    // ---------------------------- à peaufiner
-    public GetLinkString(links:Link[]):string{
-        if(links.length == 0) return "";
-        let innerHtml:string = "";
-        links.forEach((d:Link, index:number)=>{
-            innerHtml += `<div class="dataText">
-                <a>${d.name}: </a>
-                <a href="${d.url}" target="_blank">${d.name}</a>
-            </div>`
+    private ParseDatas(text:string):string{
+        let regex:RegExp = /\{\{([\s\S]*?)\}\}/g;
+        let result:string = text.replace(regex, (_, content:string)=>{
+            let block:DataBlock = new DataBlock(content);
+            switch (block.type) {
+                case DataType.link:
+                    return `<a href="${block.link}" target="_blank" class="link">${block.name}</a>`;
+                case DataType.image:
+                    return `<img src="${block.link}" loading="lazy" alt="${block.name}">`;
+                case DataType.icon:
+                    return `<i class="${block.name}"></i>`;
+                case DataType.svg:
+                    return `<iconify-icon class="iconSVG" icon="${block.link}"></iconify-icon>`;
+                    // return `<svg role="img" xmlns="${block.link}"></svg>`;
+                default:
+                    return "";
+            }
         })
-        return innerHtml;
-    }
-    // ----------------------------- à finir
-    public GetProjetString(projets:Projet[]):string{
-        if(projets.length == 0) return "";
-        let innerHtml:string = "";
-        projets.forEach((d:Projet, index:number)=>{
-            innerHtml += `<div class="dataText">
-
-            </div>`
-        })
-        return innerHtml;
+        return result.replace(/\\n/g, "<br>");
     }
 }
 

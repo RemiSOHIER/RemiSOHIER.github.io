@@ -30,7 +30,39 @@ footer{
     flex-direction: row;
     justify-content: center;
 }
+img{
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+a:link,
+a:visited,
+a:active,
+a:hover{
+    text-decoration: none;
+    color: white;
+}
+.link{
+    display: inline-block;
+    padding: 5px;
+    border-radius: 10px;
+    transition: all 1s ease;
+}
+.link:hover{
+    background-color: #97bafc;
+    box-shadow:
+            0 0 15px #4d88f7,
+            0 0 30px #4d88f7;
+}
+.iconSVG{
+    margin: 5px;
+    font-size: 25px;
+    display: inline-block;
+    vertical-align: middle;
+    /* font-size: 1em; */
+}
 button, .btn{
+    user-select: none;
     margin: 5px;
     padding: 10px;
     border: none;
@@ -81,7 +113,7 @@ section{
     border-radius: 20px;
     /* border: 1px solid #151b39; */
     /* min-height: 80%; */
-    min-width: 80%;
+    min-width: 90%;
     overflow: hidden;
     /* test */
     height: 5000px;
@@ -89,7 +121,7 @@ section{
             0 0 5px #4d88f7,
             0 0 10px #4d88f7;
     >#content{
-        padding: 10px;
+        padding: 25px;
         height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
@@ -117,17 +149,16 @@ section{
 
 }
 .dataTextTitle {
-    user-select: none;
-    background-color: #0f1a4b;
+    /* background-color: #0f1a4b; */
 }
-.dataTextTitle:hover{
+/* .dataTextTitle:hover{
     background-color: #182d8c;
     box-shadow:
             0 0 15px #182d8c,
             0 0 30px #182d8c;
-}
+} */
 .dataTextContent {
-    font-size: large;
+    font-size: medium;
     margin: 20px 10px;
     max-height: 0;
     overflow: hidden;

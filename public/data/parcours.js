@@ -1,5 +1,6 @@
 export default [
     {
+        isClosable: true,
         title: "Un parcours atypique",
         text: `J’ai un parcours initial en dehors de l’informatique, 
         avec un CAP cuisine. Mon intérêt pour le développement est 
@@ -7,12 +8,14 @@ export default [
         des outils, automatiser des tâches et concevoir des applications.`
     },
     {
+        isClosable: true,
         title: "Mes débuts dans le développement",
         text: `J’ai réellement commencé à développer en 2020 avec la création 
         de mon premier site web. Cette étape m’a permis d’apprendre 
         les bases du HTML, CSS et PHP.`
     },
     {
+        isClosable: true,
         title: "Du web statique aux architectures modernes",
         text: `Par la suite, j’ai progressivement fait évoluer ce projet 
         en explorant Symfony, puis JavaScript et TypeScript. 
@@ -24,12 +27,14 @@ export default [
         sur des architectures web modernes.`
     },
     {
+        isClosable: true,
         title: "Progressive Web Apps",
         text: `J’ai ensuite développé plusieurs Progressive Web Apps, 
         afin de rendre mes applications installables et utilisables 
         sur différents supports directement depuis le navigateur.`
     },
     {
+        isClosable: true,
         title: "Outil d'aide à la productivité",
         text: `Au fil du temps, j’ai conçu plusieurs outils orientés 
         productivité et usage réel, notamment un outil d’aide à la 
@@ -37,6 +42,7 @@ export default [
         en centre d’appel, intégrant notifications et suivi temporel,`
     },
     {
+        isClosable: true,
         title: "Projet SaaS",
         text: `En janvier 2025, j’ai commencé à développer un projet 
         SaaS de gestion de planning et de temps de travail en temps réel.
@@ -48,6 +54,7 @@ export default [
         Unreal Engine 5.`
     },
     {
+        isClosable: true,
         title: "RTS 4X spatial sous Unreal Engine 5",
         text: `Depuis août 2025, je développe un projet personnel de jeu 
         de stratégie spatial (RTS 4X) sous Unreal Engine 5, 
@@ -75,6 +82,7 @@ export default [
         les conséquences à long terme des choix technologiques du joueur.`
     },
     {
+        isClosable: true,
         title: "Aujourd’hui",
         text: `Aujourd’hui, je poursuis principalement le développement de 
         ce projet de jeu tout en continuant à améliorer mes compétences 

@@ -1,5 +1,7 @@
-import { Vector2, Vector, Page, Star, Color, DataText, Link, Projet } from "./objects";
+import { Vector2, Vector, Page, Star, Color, Data } from "./objects";
 import { Space } from "./canvasEffect"
+
+import accueilHTML from "./partials/accueil.html?raw";
 
 const title = "Rémi SOHIER";
 const lorem = `Lorem ipsum dolor sit amet consectetur 
@@ -162,7 +164,7 @@ async function UpdatePageData():Promise<void>{
     if(!pageBalise || !world) return;
     const left = window.innerWidth / 2 - page.star.radius / 2
     const top = window.innerHeight / 2 - page.star.radius / 2
-    let datas:DataText[]|Link[]|Projet[]|null = null;
+    let datas:Data[]|null = null;
     try {
         const module = await import(`/data/${page.name.toLowerCase()}.js`);
         datas = module.default ?? null;
@@ -171,20 +173,13 @@ async function UpdatePageData():Promise<void>{
     }
     let titleHtml:string = "";
     let contentHtml:string = "";
+    // if(page.name == "Accueil") contentHtml = accueilHTML;
     if(datas != null){
         titleHtml = `<div id="title">${page.name}</div>`;
-        if(page.name == "Parcours"){
-            contentHtml = page.GetDataTextString(datas as DataText[]);
-        }
-        if(page.name == "Réseaux"){
-            contentHtml = page.GetLinkString(datas as Link[]);
-        }
-        if(page.name == "Projets"){
-            contentHtml = page.GetProjetString(datas as Projet[]);
-        }
+        contentHtml += page.GetDataString(datas as Data[]);
     }else{
         titleHtml = ` <div id="title" class="warn">La page ${page.name} est en cours d'élaboration</div>`;
-        contentHtml = lorem
+        contentHtml += lorem
     }
     pageBalise.innerHTML = `
     <div class="eclipse" style="top:${top}px;left:${left}px;
@@ -217,6 +212,7 @@ function ClosePageAnimation(onComplete?:()=>void):void{
     if (!pageBalise) return;
     pageBalise.style.transform = "scale(0)";
     setTimeout(() => {
+        pageBalise.innerHTML = "";
         if (onComplete) onComplete();
     }, 500);
 }

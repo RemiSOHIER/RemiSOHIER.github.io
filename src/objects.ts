@@ -9,6 +9,7 @@ class DataBlock{
     type:DataType = DataType.link;
     name:string = "";
     link:string = "";
+    scale:number = 1;
     /** @description Récupère le text data brut et le parse */
     constructor(raw?:string) {
         if (!raw) return;
@@ -27,6 +28,12 @@ class DataBlock{
                 case "link":
                     this.link = v;
                     break;
+                case "scale":
+                    console.log(v)
+                    if(v.length > 0){
+                        this.scale = Number.parseFloat(v);
+                    }
+                    break;
             }
         }
     }
@@ -34,7 +41,6 @@ class DataBlock{
 
 export class Data{
     isClosable:boolean = false;
-    // type:DataType = DataType.text;
     title:string = "";
     text:string = "";
 }
@@ -51,7 +57,7 @@ export class Page{
             let textData:string = this.ParseDatas(d.text);
             if(d.isClosable){
                 if(d.title.length > 0){
-                    title = `<h3 class="btn dataTextTitle" data-index="${index}">- ${d.title}</h3>`
+                    title = `<h3 class="btn dataTextTitle" data-index="${index}">- ${this.ParseDatas(d.title)}</h3>`
                 }
                 innerHtml += `<div class="dataText">
                    ${title}
@@ -59,7 +65,7 @@ export class Page{
                 </div>`
             }else{
                 if(d.title.length > 0){
-                    title = `<h3 class="dataTextTitle" data-index="${index}">- ${d.title}</h3>`
+                    title = `<h3 class="dataTextTitle" data-index="${index}">- ${this.ParseDatas(d.title)}</h3>`
                 }
                 innerHtml += `<div class="dataText">
                    ${title}
@@ -77,7 +83,8 @@ export class Page{
                 case DataType.link:
                     return `<a href="${block.link}" target="_blank" class="link">${block.name}</a>`;
                 case DataType.image:
-                    return `<img src="${block.link}" loading="lazy" alt="${block.name}">`;
+                    return `<img src="${block.link}"style="width:${block.scale}px;height:${block.scale}px;"
+                     loading="lazy" alt="${block.name}">`;
                 case DataType.icon:
                     return `<i class="${block.name}"></i>`;
                 case DataType.svg:

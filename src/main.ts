@@ -2,6 +2,7 @@ import { Vector2, Vector, Page, Star, Color, Data } from "./objects";
 import { Space } from "./canvasEffect"
 
 import accueilHTML from "./partials/accueil.html?raw";
+import contactHTML from "./partials/contact.html?raw";
 
 const title = "Rémi SOHIER";
 const lorem = `Lorem ipsum dolor sit amet consectetur 
@@ -173,7 +174,8 @@ async function UpdatePageData():Promise<void>{
     }
     let titleHtml:string = "";
     let contentHtml:string = "";
-    // if(page.name == "Accueil") contentHtml = accueilHTML;
+    if(page.name == "Accueil") contentHtml = accueilHTML;
+    if(page.name == "Mentions-légales") contentHtml = contactHTML;
     if(datas != null){
         titleHtml = `<div id="title">${page.name}</div>`;
         contentHtml += page.GetDataString(datas as Data[]);

@@ -33,12 +33,15 @@ footer{
 img{
     max-width: 100%;
     height: auto;
-    display: block;
+    border-radius: 10px;
+    display: inline-block;
+    vertical-align: middle;
 }
 a:link,
 a:visited,
 a:active,
 a:hover{
+    background-color: #659bff;
     text-decoration: none;
     color: white;
 }
@@ -76,6 +79,9 @@ button:hover, .btn:hover{
     box-shadow:
             0 0 15px #4d88f7,
             0 0 30px #4d88f7;
+}
+iframe{
+    border-radius: 10px;
 }
 #page{
     z-index: 1;

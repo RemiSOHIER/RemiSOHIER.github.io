@@ -38,5 +38,15 @@
             "color": {"r": 0,"g": 0, "b": 0},
             "radius": 50
         }
+    },
+    {
+        "name": "Mentions-légales",
+        "star": {
+            "position": {"x": 10000, "y": -10000},
+            "temperature": 2000,
+            "intensity": 1,
+            "color": {"r": 0,"g": 0, "b": 0},
+            "radius": 300
+        }
     }
 ]

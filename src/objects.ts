@@ -57,7 +57,7 @@ export class Page{
             let textData:string = this.ParseDatas(d.text);
             if(d.isClosable){
                 if(d.title.length > 0){
-                    title = `<h3 class="btn dataTextTitle" data-index="${index}">- ${this.ParseDatas(d.title)}</h3>`
+                    title = `<h3 class="btn dataTextTitle" data-index="${index}">${this.ParseDatas(d.title)}</h3>`
                 }
                 innerHtml += `<div class="dataText">
                    ${title}
@@ -65,7 +65,7 @@ export class Page{
                 </div>`
             }else{
                 if(d.title.length > 0){
-                    title = `<h3 class="dataTextTitle" data-index="${index}">- ${this.ParseDatas(d.title)}</h3>`
+                    title = `<h3 class="dataTextTitle" data-index="${index}">${this.ParseDatas(d.title)}</h3>`
                 }
                 innerHtml += `<div class="dataText">
                    ${title}
@@ -81,9 +81,13 @@ export class Page{
             let block:DataBlock = new DataBlock(content);
             switch (block.type) {
                 case DataType.link:
-                    return `<a href="${block.link}" target="_blank" class="link">${block.name}</a>`;
+                    if(block.link.includes("/#/")){
+                        return `<a href="${block.link}" class="link">${block.name}</a>`;
+                    }else{
+                        return `<a href="${block.link}" target="_blank" class="link">${block.name}</a>`;
+                    }
                 case DataType.image:
-                    return `<img src="${block.link}"style="width:${block.scale}px;height:${block.scale}px;"
+                    return `<img src="${block.link}"style="max-width:${block.scale}px;max-height:${block.scale}px;"
                      loading="lazy" alt="${block.name}">`;
                 case DataType.icon:
                     return `<i class="${block.name}"></i>`;

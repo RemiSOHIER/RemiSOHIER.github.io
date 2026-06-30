@@ -14,10 +14,9 @@ body {
 }
 header{
     position: fixed;
-    z-index: 1;
+    z-index: 10;
     display: flex;
     flex-direction: row;
-    justify-content: center;
     width: 100%;
 }
 footer{
@@ -33,6 +32,7 @@ footer{
 img{
     max-width: 100%;
     height: auto;
+    object-fit: scale-down;
     border-radius: 10px;
     display: inline-block;
     vertical-align: middle;
@@ -63,6 +63,14 @@ a:hover{
     display: inline-block;
     vertical-align: middle;
     /* font-size: 1em; */
+}
+#show{
+    margin: 0px;
+    padding: 5px;
+    border-radius: 0px 0px 10px 0px;
+    >iconify-icon{
+        font-size: 25px;
+    }
 }
 button, .btn{
     user-select: none;
@@ -96,10 +104,10 @@ iframe{
     overflow: hidden;
     /* overflow-x: hidden;
     overflow-y: auto; */
-    transform: scale(0);
+    scale:  0;
     transition: all 0.5s;
 }
-.eclipse{
+#eclipse{
     pointer-events: none;
     position: absolute;
     background: radial-gradient(
@@ -157,12 +165,6 @@ section{
 .dataTextTitle {
     /* background-color: #0f1a4b; */
 }
-/* .dataTextTitle:hover{
-    background-color: #182d8c;
-    box-shadow:
-            0 0 15px #182d8c,
-            0 0 30px #182d8c;
-} */
 .dataTextContent {
     font-size: medium;
     margin: 20px 10px;
@@ -172,6 +174,15 @@ section{
 }
 .dataTextContent.open {
     max-height: 1000px;
+}
+.content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+p{
+    
 }
 
 /* largeur de la scrollbar */

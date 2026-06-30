@@ -31,15 +31,25 @@ export default [
         title: "Progressive Web Apps",
         text: `J’ai ensuite développé plusieurs Progressive Web Apps, 
         afin de rendre mes applications installables et utilisables 
-        sur différents supports directement depuis le navigateur.`
+        sur différents supports directement depuis le navigateur.
+        \\n{{
+            type:link,
+            name:en savoir plus sur le projet,
+            link:/#/Projets
+        }}`
     },
     {
         isClosable: true,
         title: "Outil d'aide à la productivité",
         text: `Au fil du temps, j’ai conçu plusieurs outils orientés 
         productivité et usage réel, notamment un outil d’aide à la 
-        gestion de tâches et de rappels utilisé 
-        en centre d’appel, intégrant notifications et suivi temporel,`
+        gestion de tâches et de rappels que j'utilise 
+        à mon travail, intégrant notifications et suivi temporel.
+        \\n{{
+            type:link,
+            name:en savoir plus sur le projet,
+            link:/#/Projets
+        }}`
     },
     {
         isClosable: true,
@@ -79,7 +89,12 @@ export default [
         mécaniques rarement mises en avant dans les RTS 4X traditionnels, 
         notamment la survie face à des civilisations technologiquement 
         supérieures, la gestion de la discrétion à l'échelle spatiale et 
-        les conséquences à long terme des choix technologiques du joueur.`
+        les conséquences à long terme des choix technologiques du joueur.
+        \\n{{
+            type:link,
+            name:en savoir plus sur le projet,
+            link:/#/Projets
+        }}`
     },
     {
         isClosable: true,

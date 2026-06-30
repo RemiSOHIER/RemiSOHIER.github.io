@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Notes Appels</title>
+	</head>
+	<style>
+:root{
+	--bg0: #1c2a40;
+	--bg1: #0a0f1f;
+	--panel: #1c2a40;
+	--btn: #2b4065;
+	--btnHover: #35507f;
+	--warn: #ce3232;
+	--warnHover: #d44c4c;
+	--font: white;
+}
+span{font-size: 20px;background-color: transparent!important;}
+*{color: var(--font);}
+body{
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	margin: 0px;
+	/*height: 100%;/**/
+	background: var(--bg0);
+	min-width: 470px;
+	overflow-x: auto;
+}
+h3, h2{
+	user-select: none;
+	margin: 5px;
+}
+.section{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 5px;
+	margin: 0px;
+	min-height: 85%;
+	border-radius: 20px;
+	background: var(--bg1);
+	overflow-y: auto;
+}
+.vignette{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	background: var(--panel);
+	padding: 5px;
+	margin: 3px 0px;
+	border-radius: 10px;
+	width: 470px;
+	>div{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		padding: 5px 0px;
+	}
+}
+header{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	padding: 5px;
+	>#listeBtn{
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-content: center;
+	}
+}
+footer{
+	position: relative;
+	display: flex;
+	flex-direction: row-reverse;
+	padding: 5px;
+	bottom: 0px;
+	left: 0px;right: 0px;
+}
+input[type=text]{cursor: text;}
+input, select, button, .btn, textarea{
+	user-select: none;
+	outline: none;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	background: var(--btn);
+	outline: 2px solid (--btn);
+	padding: 10px;
+	margin: 2px;
+	border-radius: 10px;
+	border: none;
+	transition: all 0.5s;
+}
+input:hover, select:hover, button:hover, .btn:hover, textarea:hover{
+	background: var(--btnHover);
+	transition: all 0.5s;
+}
+input:focus, select:focus, button:focus, .btn:focus, textarea:focus{
+	outline: 2px solid #4A90E2;
+}
+input:disabled, .btn:disabled{
+	background: none;
+	cursor: default;
+}
+input[type=time]{
+	width: 68px;
+}
+textarea{
+	resize: none;
+	cursor: text;
+}
+#noteAppel{
+	height: 150px;
+}
+#dataOT{
+	height: 150px;
+}
+.warning{
+	background: var(--warn);
+	color: black;
+	font-weight: bold;
+}
+.warning:hover{
+	background: var(--warnHover);
+	font-weight: bold;
+}
+/*-----------------------------tooltip---------------------------------*/
+#tooltip{
+	z-index: 1000;
+	position: absolute;
+	text-wrap: balance;
+	max-width: 200px;
+	border-radius: 5px;
+	background: rgba(30, 30, 30, 0.5); /* semi-transparent */
+	backdrop-filter: blur(5px) saturate(1.5);
+	-webkit-backdrop-filter: blur(5px) saturate(1.5);
+}
+/*-----------------------------END tooltip---------------------------------*/
+/*-----------------------------POPUP---------------------------------*/
+.bgPopup{
+	display: none;
+	position: absolute;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background: rgba(100,100,100,0.3);
+	backdrop-filter: blur(10px) saturate(1.5);
+	-webkit-backdrop-filter: blur(10px) saturate(1.5);
+	overflow: hidden;
+	transition: all 1s;
+}
+.popup{
+	display: flex;
+	flex-direction: column;
+	background: var(--bg0);
+	border-radius: 10px;
+	padding: 10px;
+	>div{
+		display: flex;
+		flex-direction: row;
+		padding: 10px;
+	}
+}
+#popup{
+	>textarea{
+		height: 300px;
+	}
+	height: min-content;
+	max-height: 90%;
+}
+#relances{
+	display: flex;
+	flex-direction: column;
+	max-height: 300px;
+}
+#listRelances{
+	display: flex;
+	flex-direction: column;
+	>label{
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		>input[type=text]{
+			/* width: 100%; */
+		}
+	}
+}
+#relancesActions{
+	display: flex;
+	flex-direction: row;
+}
+/*-----------------------------END POPUP---------------------------------*/
+/*-----------------------------SUIVI---------------------------------*/
+#addSuivi{
+	display: flex;
+	flex-direction: row!important;
+	justify-content: space-around!important;
+}
+#gestionSuivi{
+	display: flex;
+	flex-direction: column;
+	border-radius: 10px;
+	overflow: hidden;
+	border: 2px solid #0a0f1f;
+	max-height: 250px;
+}
+#rappelList{
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	overflow-y: auto;
+}
+#gestionSuivi .suivi{
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	justify-content: center;
+	align-content: space-between;
+	height: 50px;
+	border-bottom: 2px solid #0a0f1f;
+}
+#gestionSuivi .suivi *{
+	margin: 0px;
+	transition: all 1s;
+}
+#gestionSuivi .suivi textarea{
+	cursor: text;
+	resize: none;
+	background: #555;
+	border: none;
+	border-radius: 0px;
+	overflow: hidden;
+}
+#gestionSuivi .suivi input[type=datetime]{
+	height: 15px; width: 40px;
+	cursor: text;
+	text-align: center;
+	border-radius: 5px;
+	border: 1px solid #0a0f1f;
+	background: none;
+}
+#gestionSuivi .suivi #show{font-size: 20px;padding: 5px 9px;}
+/*-----------------------------END SUIVI---------------------------------*/
+/*-----------------------------TOGGLE------------------------------------*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Masquer le checkbox natif */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Le slider (le design du switch) */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color:  var(--bg0)!important;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+/* Le cercle intérieur */
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color:  var(--btnHover)!important;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+/* Quand c’est activé (checked) */
+input:checked + .slider {
+  background-color: #4CAF50!important;
+}
+
+input:checked + .slider::before {
+  transform: translateX(26px);
+}
+	</style><!-- -->
+	<script>
+		// Crée un icone pour l'onglet
+		const emoji = "✎"; 
+		const canvas = document.createElement("canvas");
+		canvas.width = 64;
+		canvas.height = 64;
+		const ctx = canvas.getContext("2d");
+		ctx.font = "70px Arial";
+		ctx.fillStyle = "#059100"
+		ctx.fillText(emoji, 0, 60);
+		
+		const link = document.createElement("link");
+		link.rel = "icon";
+		link.href = canvas.toDataURL();
+		document.head.appendChild(link);
+	</script>
+	<body>
+		<header>
+			<!--<h1>Notes Appels V1<br/><button onclick="newWindow(window.location.href, 1000, 700);window.close()" class="btn">Click here to open in popup</button></h1>-->
+			<h3>Notes Appels V2.0</h3>
+			<div id="listeBtn">
+				<!--<a href="https://www.google.fr/maps/" target="_blank" class="btn" tabindex="-1">Google Maps</a>-->
+			</div>
+		</header>
+		<div class="section" id="sectionBody">
+			<div class="vignette">
+				<div>
+					<h3>Notes d'appel</h3>
+					<input data="note" type="text" id="agentName" maxlength="2000" tabindex="1" placeholder="Nom de l'agent" data-tooltip="Le nom de l'agent sera utilisé comme signature dans les mails générés"/>
+					<h3 id="horloge"></h3>
+				</div>
+				<input data="note" type="text" id="clientData" maxlength="2000" tabindex="1" value="" placeholder="N° Client et Nom du client" size="45"/>
+				<input data="note" type="text" id="numberOT" maxlength="100" tabindex="1" value="" placeholder="N° OT" size="45"/>
+				<textarea data="note" id="dataOT" maxlength="10000" placeholder="Détail de la demande d'intervention" tabindex="1" autofocus></textarea>
+				<div>
+					<button class="btn" onClick="MailToMonito(false)" data-tooltip="Génère le mail monito dans le presse papiers"><span>📧</span>Mail Monito</button>
+					<button class="btn" onClick="MailRelance(false)" data-tooltip="Génère le mail de relance dans le presse papiers"><span>📧</span>Mail Relance</button>
+					<button class="btn" onClick="MailAlarmeRetablie()" data-tooltip="Génère le mail d'alarme rétablie dans le presse papiers"><span>📧</span>Mail Alarme rétablie</button>
+				</div>
+				<textarea data="note" id="noteAppel" maxlength="10000" placeholder="Notes appel (perso ne sera pas enregistré pour les mails)" tabindex="1"></textarea>
+				<div>
+					<!--<button class="btn" id="copyNote"><span>&#128203</span>copier la note</button>-->
+					<button class="btn" onClick="ClipBoardAllNotes()"><span>&#128203</span>copier les notes</button>
+					<button class="btn warning" id="deleteNote" data-tooltip="Vide tout les champs de notes en cours"><span class="warning">&#128465 </span>vider</button>
+				</div>
+				<div id="gestionSuivi">
+					<div id="addSuivi" class="suivi">
+						<input type="datetime-local" id="addToRappelTime" maxlength="5" tabindex="1"/>
+						<!--<button class="btn" id="addToRappel">Ajouter la note aux suivis</button>
+						<button class="btn" id="addToRappelRelance" onclick="OpenRelanceMenu()">Relancer <span>↺</span></button>-->
+						<button class="btn" id="addToRappel" onclick="AddRappel()">Ajouter la note aux suivis</button>
+						<button class="btn" onclick="OpenRelanceMenu()">Relancer <span>↺</span></button>
+					</div>
+					<div id="rappelList"></div>
+				</div>
+			</div>
+		</div>
+		<footer>
+			<a id="contact">Créé par Rémi SOHIER</a>
+		</footer>
+		<div id="tooltip" style="z-index: 100;"></div>
+		<div id="bgPopup" class="bgPopup" style="z-index: 5;">
+			<div id="popup" class="popup">
+				<h3>Modifier le rappel</h3>
+				<input type="text" id="clientDataPopup" maxlength="2000" tabindex="1" placeholder="N° Client et Nom client" size="45"/>
+				<input type="text" id="numberOTPopup" maxlength="100" tabindex="1" placeholder="N° OT" size="45"/>
+				<textarea id="dataOTPopup" maxlength="10000" placeholder="Détail de la demande d'intervention" tabindex="1" autofocus></textarea>
+				<div id="relances">
+					<div id="listRelances"></div>
+					<div id="relancesActions">
+						<textarea maxlength="2000" id="noteClotureRelance" style="width: 300px;" placeholder="Note de fin de relance"></textarea>
+						<input type="button" id="noteClotureRelanceDate" value="Relance Terminée"/>
+					</div>
+				</div>
+				<div>
+					<button class="btn" onClick="MailToMonito(true)"><span>📧</span>Mail Monito</button>
+					<button class="btn" onClick="MailRelance(true)"><span>📧</span>Mail Relance</button>
+					<button class="btn" onClick="MailEscalade()"><span>📧</span>Mail Escalade</button>
+				</div>
+				<textarea id="noteAppelPopup" maxlength="10000" placeholder="Notes appel (perso ne sera pas enregistré pour les mails)" tabindex="1"></textarea>
+				<!--<textarea id="notePopup" maxlength="10000" placeholder="Rappel" tabindex="1" autofocus></textarea>-->
+				<div>
+					<button class="btn warning" id="delete" onclick="DeleteRappelPopup()" tabindex="-1"><span id="delete">&#128465</span></button>
+					<input type="datetime-local" id="updateTimeRappel" class="time" maxlength="5" tabindex="5"/>
+					<button class="btn" id="updateSuivis" onclick="SavePopupRappel()">Sauvegarder</button>
+					<button class="btn" id="relanceSuivis" onclick="OpenRelanceMenu()">Relancer <span>↺</span></button>
+					<button class="btn" id="closePopup" onclick="ClosePopup()">❌</button>
+				</div>
+			</div>
+		</div>
+		<div id="bgPopupRelance" class="bgPopup" style="z-index: 10;">
+			<div class="popup">
+				<h3>Relancer:</h3>
+				<textarea id="noteRelancePopup" maxlength="10000" placeholder="Détail de la relance" tabindex="1"></textarea>
+				<button class="btn" id="relanceSuivis" onclick="RappelRelance(10)">Relancer dans 10 minutes</button>
+				<button class="btn" id="relanceSuivis" onclick="RappelRelance(15)">Relancer dans 15 minutes</button>
+				<button class="btn" id="relanceSuivis" onclick="RappelRelance(30)">Relancer dans 30 minutes</button>
+				<button class="btn" id="relanceSuivis" onclick="RappelRelance(45)">Relancer dans 45 minutes</button>
+				<button class="btn" id="relanceSuivis" onclick="RappelRelance(60)">Relancer dans 1 heure</button>
+				<div>
+					<label id="relanceSuivis">Personalisé:
+						<input type="number" id="relanceSuivisCustom" class="time" maxlength="3" tabindex="5" value="120"/>
+					</label>
+					<button class="btn" id="relanceSuivis" onclick="RappelRelance(document.getElementById('relanceSuivisCustom').value)">valider la relance personnalisé</button>
+					<button class="btn" id="closePopup" onclick="ClosePopupRelance()">❌</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">	
+class Note{
+	id = 0;
+	clientData = "";
+	numberOT = "";
+	dataOT = "";
+	noteAppel = "";
+	dateRappel = new Date();
+	sended = false;
+	relances = [];
+	clotureRelance = new Relance();
+	constructor(){
+		this.clotureRelance = new Relance();
+	}
+}
+class Relance{
+	date = new Date();
+	toDate = new Date();
+	text = "";
+}
+Note.prototype.SortRelance = function(){
+    this.relances.sort((a, b) => a.date - b.date);
+}
+class Rappel{
+	id = 0
+	note = ""
+	date = new Date();
+	sended = false
+	escalades = [];
+	constructor(note="", date=new Date()){
+		this.id = new Date().getTime()
+		this.note = note
+		this.date = new Date(date)
+	}
+}
+class Vector2{
+	x = 0
+	y = 0
+	constructor(x=0,y=0){
+		this.x = x
+		this.y = y
+	}
+}
+Date.prototype.toDateTime = function(){
+	const yyyy = this.getFullYear();
+	const mm = String(this.getMonth() + 1).padStart(2, '0');
+	const dd = String(this.getDate()).padStart(2, '0');
+	const hh = String(this.getHours()).padStart(2, '0');
+	const min = String(this.getMinutes()).padStart(2, '0');
+	return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
+Date.prototype.toText = function(){
+	const yyyy = this.getFullYear();
+	const mm = String(this.getMonth() + 1).padStart(2, '0');
+	const dd = String(this.getDate()).padStart(2, '0');
+	const hh = String(this.getHours()).padStart(2, '0');
+	const min = String(this.getMinutes()).padStart(2, '0');
+	const sec = String(this.getSeconds()).padStart(2, '0');
+	return `${dd}/${mm}/${yyyy} ${hh}:${min}:${sec}`;
+}
+Date.prototype.getHoursAndMin = function(){
+	let hour = this.getHours()
+	let min = this.getMinutes()
+	if(hour < 10){
+		hour = "0"+hour
+	}
+	if(min < 10){
+		min = "0"+min
+	}
+	return hour+":"+min
+}
+Date.prototype.addMin = function(nbr){
+	return new Date(this.getTime()+(nbr*60*1000))
+}
+Date.prototype.addHour = function(nbr){
+	return new Date(this.getTime()+(nbr*60*60*1000))
+}
+
+const bgPopup = document.getElementById("bgPopup")
+const bgPopupRelance = document.getElementById("bgPopupRelance")
+const noteClotureRelance = document.getElementById("noteClotureRelance");
+const noteClotureRelanceDate = document.getElementById("noteClotureRelanceDate");
+const popupRappelIsOpen = ()=>{return bgPopup.style.display != "none"};
+
+const agentName = document.getElementById("agentName")
+const clientData = document.getElementById("clientData")
+const numberOT = document.getElementById("numberOT")
+const dataOT = document.getElementById("dataOT")
+const noteAppel = document.getElementById("noteAppel");
+
+var tooltip = document.getElementById("tooltip");
+
+const addToRappelTime = document.getElementById("addToRappelTime")
+// const notePopup = document.getElementById("notePopup")
+const updateTimeRappel = document.getElementById("updateTimeRappel")
+
+let note = new Note();
+let notes = [];
+let popupNote = new Note();
+
+let rappels = []
+//let popupOpenOnRappel = new Rappel()
+window.addEventListener("load", function(){//-----OnLoad-----
+	Init();
+	//GestionSuivis("load");
+	//GestionSuivis("cascade");
+	//noteAppel.value = localStorage.getItem("noteAppel");
+	// LoadNoteAppel();
+	var isPopup = localStorage.getItem("isPopup");
+	if(isPopup == "false"){
+		localStorage.setItem("isPopup", true);
+		//newWindow(window.location.href, 1000, 700);
+		//window.close()
+	}
+});
+window.addEventListener("unload", function(){//-----OnUnload-----
+	var isPopup = localStorage.getItem("isPopup");
+	if(isPopup == "true"){
+		localStorage.setItem("isPopup", false);
+	}
+});
+document.addEventListener("click", e=>{
+	if(e.srcElement.id == "copyNote"){
+		clipBoard(noteAppel.value)
+	}
+	if(e.srcElement.id == "deleteNote"){
+		DeleteNote()
+		//noteAppel.value = "";
+		//localStorage.setItem("note", noteAppel.value);
+	}
+	//--------------------------------------------------ADD NOTE TO RAPPEL
+	/*if(e.srcElement.id == "addToRappel"){
+		const rappel = new Rappel(noteAppel.value, new Date(addToRappelTime.value))
+		AddRappel(rappel)
+	}//*/
+	//--------------------------------------------------close popup on click on BG
+	if(e.srcElement.id === "bgPopup"){
+		ClosePopup()
+	}
+	//--------------------------------------------------close popup on click on BG
+	if(e.srcElement.id === "bgPopupRelance"){
+		ClosePopupRelance()
+	}
+});
+document.body.addEventListener("keyup", e=>{//-----OnKeyup-----
+	//sessionStorage.setItem("autosave", note.value);
+	//localStorage.setItem("note", note.value);
+	//--------------------------------------------------SAVE NOTE
+	if(e.target.getAttribute("data") == "note"){
+		SaveNoteAppel();
+	}
+	//--------------------------------------------------UPDATE RELANCE TEXT
+	// data="relance" data-date="r.date"
+	if(e.target.getAttribute("data") == "relance"){
+		UpdateRelanceText(new Date(e.target.getAttribute("data-date")), e.target);
+	}
+	//--------------------------------------------------UPDATE RELANCE TEXT
+	if(e.srcElement.id == "noteClotureRelance"){
+		UpdateClotureRelanceText(e.target.value);
+	}
+	if(e.srcElement.id == "noteClotureRelanceDate"){
+		UpdateClotureRelanceDate(new Date());
+	}
+	//--------------------------------------------------LOCK CTRL + W
+	if(e.ctrlKey && e.key.toLowerCase() === 'w'){
+		e.preventDefault()
+	}
+	//--------------------------------------------------Input Maps
+	if(e.srcElement.id === "inputMapsSearch"){
+		ToggleSearchStyle()
+	}
+	if(e.key == "Enter"){
+		//--------------------------------------------------ADD NOTE TO RAPPEL
+		if(e.srcElement.id == "addToRappelTime"){
+			AddRappel()
+		}
+		//--------------------------------------------------SET CUSTOM RELANCE RAPPEL
+		if(e.srcElement.id == "relanceSuivisCustom"){
+		console.log(e.srcElement.value)
+			RappelRelance(e.srcElement.value)
+		}
+		//--------------------------------------------------UPDATE RAPPEL
+		if(e.srcElement.id == "updateTimeRappel"){
+			UpdateRappel()
+			ClosePopup()
+		}
+	}
+});
+document.body.addEventListener("mousemove", e=>{//-----OnMouseMove-----
+	const vector = new Vector2(e.x, e.y)
+	if(e.target.getAttribute("data-tooltip") !== null){
+		UpdateTooltip(vector, e.target.getAttribute("data-tooltip"));
+	}else{
+		DisableTooltip();
+	}
+});
+window.addEventListener('beforeunload', function (e) {//bloquer le reload ou exit
+    // Le message exact n'est plus affiché par certains navigateurs modernes
+	//e.preventDefault(); // Chrome requiert cette ligne
+	//e.returnValue = ''; // Obligatoire pour que la boîte apparaisse
+});
+let loopInstantly = false
+let loopTimer = null;
+let lastRappel = 0;
+window.addEventListener('focus', function (e) {//on focus
+    loopInstantly = true;
+    // Forcer mise à jour immédiate
+    if (loopTimer) clearTimeout(loopTimer);
+    LoopUpdate();
+});
+window.addEventListener('blur', function (e) {//on blur
+	loopInstantly = false
+    // Forcer mise à jour immédiate
+    if (loopTimer) clearTimeout(loopTimer);
+    LoopUpdate();
+});
+function Init(){
+	ClosePopup()
+	//ToggleSearchStyle()//for google maps
+	LoopUpdate()
+	//AskNotificationPermission()
+	LoadRappels()
+	const date = new Date(new Date().setHours(0,0,0,0))
+	addToRappelTime.value = date.toDateTime()
+	LoadNoteAppel();
+	if(localStorage.getItem("rappels")){
+		LoadRappels()
+	}
+}
+async function LoopUpdate() {
+    const now = Date.now();
+    // Mise à jour de l'horloge
+    document.getElementById("horloge").innerHTML = new Date().toText();
+    // Exécution des rappels toutes les 10s
+    if (now - lastRappel >= 10*1000) {
+        setTimeout(() => { 
+            RappelsCascade(); 
+            CheckSended(); 
+        }, 0); // non bloquant
+        lastRappel = now;
+    }
+    // Prochaine exécution
+    const delay = loopInstantly ? 0.5*1000 : 10*1000;
+    // Ajuster le prochain timer pour que la boucle reste régulière
+    loopTimer = setTimeout(LoopUpdate, delay);
+}
+function newWindow(adress, width, height) {
+	var newWindow = window.open(adress, "_blank", "width=" + width+", height=" + height);
+}
+function clipBoard(text) {
+	const textarea = document.createElement("textarea");
+	textarea.value = text;
+	textarea.setAttribute("readonly", "");
+	textarea.style.position = "absolute";
+	textarea.style.left = "-9999px";
+	document.body.appendChild(textarea);
+	textarea.select();
+	document.execCommand("copy");
+	document.body.removeChild(textarea);
+}
+function clipBoardDecodeURI(text){
+	clipBoard(decodeURIComponent(text))
+}
+//-------------------------------------------------------------- TOOLTIP
+function UpdateTooltip(vector, text) {
+	const offset = 10;
+	const tooltip = document.getElementById("tooltip"); // Assure-toi que cet ID est correct
+	// Met à jour le texte et affiche
+	tooltip.innerHTML = text;
+	tooltip.style.display = "flex";
+	tooltip.style.padding = "10px";
+	tooltip.style.position = "absolute"; // Nécessaire si ce n'est pas déjà mis
+	// D'abord, positionne à l'endroit "idéal"
+	tooltip.style.top = vector.y + offset + "px";
+	tooltip.style.left = vector.x + offset + "px";
+	// Attend que le DOM ait pris en compte la taille
+	requestAnimationFrame(() => {
+		const rect = tooltip.getBoundingClientRect();
+		const maxRight = window.innerWidth;
+		const maxBottom = window.innerHeight;
+		let top = vector.y + offset;
+		let left = vector.x + offset;
+		// Corrige le dépassement à droite
+		if (rect.right > maxRight - 10) {
+			left = vector.x - rect.width - offset;
+		}
+		// Corrige le dépassement en bas
+		if (rect.bottom > maxBottom - 10) {
+			top = vector.y - rect.height - offset;
+		}
+		// Applique les corrections finales
+		tooltip.style.top = `${Math.max(top, 0)}px`;
+		tooltip.style.left = `${Math.max(left, 0)}px`;
+	});
+}
+
+function DisableTooltip(){
+	tooltip.style.padding = "0px";
+	tooltip.innerHTML = ""
+	tooltip.style.diplay = "none"
+}
+//-------------------------------------------------------------- END TOOLTIP
+//-------------------------------------------------------------- POPUP
+const clientDataPopup = document.getElementById("clientDataPopup")
+const numberOTPopup = document.getElementById("numberOTPopup")
+const dataOTPopup = document.getElementById("dataOTPopup")
+const noteAppelPopup = document.getElementById("noteAppelPopup");
+const noteRelancePopup = document.getElementById("noteRelancePopup");
+const listRelances = document.getElementById("listRelances");
+
+//let popupRappel = new Note();
+function OpenPopup(id){
+	bgPopup.style.display = "flex"
+	bgPopup.style.height = "100%"
+	bgPopup.style.width = "100%"
+	let noteFounded = notes[notes.findIndex(r=>r.id===id)]
+	if(noteFounded == null) noteFounded = new Note();
+	//popupRappel = noteFounded
+	popupNote = noteFounded
+	// popupNote.clientData = noteFounded?.clientData
+	// popupNote.numberOT = noteFounded?.numberOT
+	// popupNote.dataOT = noteFounded?.dataOT
+	// popupNote.noteAppel = noteFounded?.noteAppel
+	
+	clientDataPopup.value = popupNote.clientData
+	numberOTPopup.value = popupNote.numberOT
+	dataOTPopup.value = popupNote.dataOT
+	noteAppelPopup.value = popupNote.noteAppel 
+	//notePopup.value = noteFounded?.noteAppel
+	updateTimeRappel.value = new Date(noteFounded?.dateRappel).toDateTime()
+	//UpdateVisualEscalades()
+	GetRelancesListView()
+}
+function GetRelancesListView(){
+	listRelances.innerHTML = "";
+	popupNote.SortRelance();
+	listRelances.innerHTML += `<div style="max-height: 100px;">`
+	popupNote.relances.forEach(r=>{
+		// listRelances.innerHTML += `<div>${r.text}</div>`
+		listRelances.innerHTML += `<label>- ${new Date(r.date).getHoursAndMin()} <input data="relance" data-date="${r.date}" type="text" value="${r.text}" 
+		placeholder="Que s'est il passé à ${new Date(r.date).getHoursAndMin()} ? (si rien n'est entré, cette relance sera ignorée)"/>
+		<input type="button" onClick="clipBoard('-> ${new Date(r.date).getHoursAndMin()}: ${r.text}')" value="&#128203 Copier"/></label>`
+	})
+	listRelances.innerHTML += `</div>`
+	if(popupNote.relances.length > 0){
+		noteClotureRelance.style.display = "flex"
+		noteClotureRelanceDate.style.display = "flex"
+		noteClotureRelance.value = popupNote.clotureRelance.text
+	}else{
+		noteClotureRelance.style.display = "none"
+		noteClotureRelanceDate.style.display = "none"
+	}
+}
+function UpdateRelanceText(date, target){
+	//--------------------------------------------------------------------------------------------------------------------
+	// Dès qu'un changement est fait tout est save dans tout les cas meme si on save pas le rappel la relance est autosave
+	//--------------------------------------------------------------------------------------------------------------------
+	if(popupRappelIsOpen()){
+		const relanceIndex = popupNote.relances.findIndex(r=>new Date(r.date).getTime() === new Date(date).getTime())
+		console.log("index: "+relanceIndex)
+		if(popupNote.relances.length > 0){
+			Object.assign(new Relance(), popupNote.relances[relanceIndex]);
+			// popupNote.relances[relanceIndex].date = new Date(date);
+			popupNote.relances[relanceIndex].text = target.value;
+		}
+	}
+	// SavePopupDataRappel()
+	// UpdateRappel()
+}
+function UpdateClotureRelanceText(text){
+	popupNote.clotureRelance.text = text;
+}
+function UpdateClotureRelanceDate(date){
+	popupNote.clotureRelance.date = new Date(date);
+}
+function OpenRelanceMenu(){
+	bgPopupRelance.style.display = "flex"
+	bgPopupRelance.style.height = "100%"
+	bgPopupRelance.style.width = "100%"
+}
+function RappelRelance(min=15){
+	const relanceDate = new Date().addMin(min)
+	if(popupRappelIsOpen()){
+		// notePopup.value += `\n-> ${new Date().toText()} relanceDate pour ${relanceDate.getHoursAndMin()} (+${min} min)`
+		if(noteRelancePopup.value != ""){
+			let relance = {date: new Date(), toDate: new Date(relanceDate), text: noteRelancePopup.value}
+			console.log(popupNote)
+			popupNote.relances = [...popupNote.relances, relance];
+		}
+		updateTimeRappel.value = relanceDate.toDateTime()
+		popupNote.dateRappel = new Date(updateTimeRappel.value)
+		GetRelancesListView()
+		SavePopupDataRappel()
+		UpdateRappel()
+		ClosePopupRelance()
+	}else{
+		addToRappelTime.value = relanceDate.toDateTime()
+		if(noteRelancePopup.value != ""){
+			let relance = {date: new Date(), toDate: new Date(relanceDate), text: noteRelancePopup.value}
+			console.log(note)
+			note.relances = [...note.relances, relance];
+		}
+		noteRelancePopup.value = ""
+		//const rappel = new Rappel(noteAppel.value+`\n-> ${new Date().toText()} relanceDate pour ${relanceDate.getHoursAndMin()} (+${min} min)`, new Date(updateTimeRappel.value))
+		//AddRappel(rappel)
+		AddRappel()
+		ClosePopupRelance()
+	}
+}
+function SavePopupDataRappel(){
+	popupNote.clientData = clientDataPopup.value
+	popupNote.numberOT = numberOTPopup.value
+	popupNote.dataOT = dataOTPopup.value
+	popupNote.noteAppel = noteAppelPopup.value
+	popupNote.dateRappel = new Date(updateTimeRappel.value)
+}
+function SavePopupRappel(){
+	SavePopupDataRappel()
+	UpdateRappel()
+	ClosePopup()
+	ClosePopupRelance()
+}
+function DeleteRappelPopup(){
+	DeleteRappel(popupNote.id)
+	ClosePopup()
+	ClosePopupRelance()
+}
+function ClosePopup(){
+	bgPopup.style.display = "none"
+	bgPopup.style.height = "0px"
+	bgPopup.style.width = "0px"
+}
+function ClosePopupRelance(){
+	bgPopupRelance.style.display = "none"
+	bgPopupRelance.style.height = "0px"
+	bgPopupRelance.style.width = "0px"
+}
+//-------------------------------------------------------------- END POPUP
+//-------------------------------------------------------------- SPECIALITÉ
+function LoadNoteAppel(){
+	if(localStorage.getItem("agentName"))
+	{
+		agentName.value = localStorage.getItem("agentName")
+	}
+	note = Object.assign(new Note(), JSON.parse(localStorage.getItem("noteAppel")))
+	notes = notes.map(n =>
+        Object.assign(new Note(), n)
+    );
+	if(note != null)
+	{
+		clientData.value = note.clientData
+		numberOT.value = note.numberOT
+		dataOT.value = note.dataOT
+		noteAppel.value = note.noteAppel
+	}
+}
+function SaveNoteAppel(){
+    if(note == null){
+        console.warn("Save annulé : note null");
+        return;
+    }
+	Object.assign(new Note(), note)
+	note.clientData = clientData.value,
+	note.numberOT = numberOT.value,
+	note.dataOT = dataOT.value,
+	note.noteAppel = noteAppel.value
+	localStorage.setItem("agentName", agentName.value);
+	localStorage.setItem("noteAppel", JSON.stringify(note));
+}
+
+function MailToMonito(isPopup){
+	let textMail = "";
+	let datasNote = (isPopup)?popupNote:note;
+	textMail += `MONITO \/\/ ${datasNote.clientData} \/\/ ${datasNote.numberOT}\n`;
+	textMail += `Bonjour,\n\n`;
+	textMail += `Site: ${datasNote.clientData}\n\n`;
+	textMail += `N° avis / OT :  ${datasNote.numberOT}\n\n`;
+	textMail += `Demande: ${datasNote.dataOT}\n\n`;
+	textMail += `Cordialement, ${agentName.value}`;
+	//console.log(textMail)
+	clipBoard(textMail);
+}
+function MailRelance(isPopup){
+	let textMail = "";
+	let datasNote = (isPopup)?popupNote:note;
+	textMail += `RELANCE \/\/ ${datasNote.clientData} \/\/ ${datasNote.numberOT}\n`;
+	textMail += `Bonjour,\n\n`;
+	textMail += `Compte: ${datasNote.clientData}\n\n`;
+	textMail += `Avis: ${datasNote.numberOT}\n`;
+	textMail += `${datasNote.dataOT}\n\n`;
+	textMail += `Cordialement, ${agentName.value}`;
+	//console.log(textMail)
+	clipBoard(textMail);
+}
+function MailAlarmeRetablie(){
+	let textMail = "";
+	textMail += `ALARME RETABLIE \/\/ ${note.clientData}\n`;
+	textMail += `Bonjour,\n\n`;
+	textMail += `${note.clientData}\n\n`;
+	textMail += `${note.dataOT}\n\n`;
+	textMail += `Cordialement, ${agentName.value}`;
+	//console.log(textMail)
+	clipBoard(textMail);
+}
+function MailEscalade(){
+	let textMail = "";
+	textMail += `ESCALADE \/\/ ${popupNote.clientData} \/\/ ${popupNote.numberOT}\n`;
+	textMail += `Compte client : ${popupNote.clientData}\n\n`;
+	textMail += `N° avis / OT : ${popupNote.numberOT}\n\n`;
+	textMail += `Cause de l’escalade :\n${popupNote.dataOT}\n\n`;
+	if(popupNote.relances.length > 0){
+		let textEscalade = "";
+		popupNote.relances.forEach(r=>{
+			if(r.text.length > 0){
+				textEscalade += `- ${new Date(r.date).getHoursAndMin()} ${r.text}`
+			}
+		})
+		textMail += `Détail de toute l’escalade : \n${textEscalade}\n`;
+		textMail += `- ${new Date(popupNote.clotureRelance.date).getHoursAndMin()} ${popupNote.clotureRelance.text}\n\n`;
+	}
+	textMail += `Cordialement, ${agentName.value}`;
+	//console.log(textMail)
+	clipBoard(textMail);
+}
+
+function ClipBoardAllNotes(){
+	let allNotes = ""
+	allNotes += `${note.clientData}\n\n`;
+	allNotes += `----------------------------------\n`;
+	allNotes += `${note.numberOT}\n\n`;
+	allNotes += `----------------------------------\n`;
+	allNotes += `${note.dataOT}\n\n`;
+	allNotes += `----------------------------------\n`;
+	allNotes += `${note.noteAppel}\n\n`;
+	//console.log(allNotes)
+	clipBoard(allNotes);
+}
+function DeleteNote(){
+	clientData.value = ""
+	numberOT.value = ""
+	dataOT.value = ""
+	noteAppel.value = ""
+	note = new Note();
+	SaveNoteAppel();
+}
+//-------------------------------------------------------------- END SPECIALITÉ
+//-------------------------------------------------------------- NOTIFICATION
+function AskNotificationPermission(){
+	if(Notification.permission === "granted")return;
+	if(Notification.permission !== "denied"){
+		Notification.requestPermission().then(permission=>{
+			console.log("Permission notification:", permission)
+		});
+	}
+}
+function SendNotification(title, body, tagId){
+	if(Notification.permission === "granted"){
+		const emoji = "✎";
+		const canvas = document.createElement("canvas");
+		canvas.width = 64;
+		canvas.height = 64;
+		const ctx = canvas.getContext("2d");
+		ctx.font = "70px Arial";
+		ctx.fillStyle = "#059100";
+		ctx.fillText(emoji, 0, 60);
+		const iconDataUrl = canvas.toDataURL();
+
+		new Notification(title, {body: body, icon: iconDataUrl, tag:"rappel-"+tagId});
+		//sur chrome cela demande l'autorisation a chaque fois a moins que j'ai mal fait un truc
+	} else if (Notification.permission !== "denied") {
+		Notification.requestPermission().then(permission => {
+			if (permission === "granted") {
+				showNotification(title, body);
+			}
+		});
+	}
+}
+function playNotificationSound() {//plus aigu
+	const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+	const playNote = (freq, delay = 0) => {
+		const osc = audioCtx.createOscillator();
+		const gain = audioCtx.createGain();
+
+		osc.type = "sine"; // Onde claire, non agressive
+		osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+
+		// Fade rapide (son bref et clean)
+		gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + delay);
+		gain.gain.exponentialRampToValueAtTime(0.4, audioCtx.currentTime + delay + 0.02);
+		gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + 0.25);
+
+		osc.connect(gain);
+		gain.connect(audioCtx.destination);
+
+		osc.start(audioCtx.currentTime + delay);
+		osc.stop(audioCtx.currentTime + delay + 0.3);
+	};
+
+	// Son double, rapide et clair
+	playNote(880);      // La5
+	playNote(1175, 0.15); // Ré#6 (plus aigu, 150ms après)
+}
+//-------------------------------------------------------------- END NOTIFICATION
+//-------------------------------------------------------------- RAPPELS
+var rappelList = document.getElementById("rappelList");
+
+function AddRappel(){
+	note.id = new Date().getTime();
+	note.dateRappel = new Date(addToRappelTime.value);
+	notes = [...notes, note]
+	DeleteNote();
+	SaveRappels()
+	note = new Note();
+	SaveNoteAppel();
+		console.log(notes)
+	const date = new Date(new Date().setHours(0,0,0,0))
+	addToRappelTime.value = date.toDateTime()
+}
+function DeleteRappel(id){
+	notes = notes.filter(r=>r.id!==id)
+	SaveRappels()
+}
+function LoadRappels(){
+	//rappels = JSON.parse(localStorage.getItem("rappels") || "[]")
+	notes = JSON.parse(localStorage.getItem("notes") || "[]")
+	if(notes === null){
+		SaveRappels()
+	}else{
+		TriRappels()
+	}
+}
+function SaveRappels(){
+	//localStorage.setItem("rappels", JSON.stringify(rappels));
+	localStorage.setItem("notes", JSON.stringify(notes));
+	TriRappels()
+}
+function UpdateRappel(){
+	popupNote.clientData = clientDataPopup.value
+	popupNote.numberOT = numberOTPopup.value
+	popupNote.dataOT = dataOTPopup.value
+	popupNote.noteAppel = noteAppelPopup.value
+	popupNote.dateRappel = new Date(updateTimeRappel.value)
+	const rappelId = notes.findIndex(r=>r.id === popupNote.id)
+	popupNote.sended = false
+	notes[rappelId] = popupNote
+	TriRappels()
+	SaveRappels()
+}
+function TriRappels(){
+	if (!Array.isArray(notes)) {
+		console.error("rappels n'est pas un tableau !");
+		return;
+	}
+	notes = notes.sort((a,b)=>new Date(a.dateRappel).getTime()-new Date(b.dateRappel).getTime())
+	GenerateVisualRappels()
+}
+function GenerateVisualRappels(){
+	rappelList.innerHTML = ""
+	notes.forEach(r=>{
+		console.log(r)
+		var suivi = document.createElement("div");
+		suivi.setAttribute("class", "suivi");
+		suivi.innerHTML = '<textarea disabled maxlength="2000" style="height: 50px;width: 40%;">'+r.clientData+'\n'+r.dataOT+'</textarea>';
+		suivi.innerHTML += '<input disabled type="datetime-local" class="time" value="'+new Date(r.dateRappel).toDateTime()+'" maxlength="5"/>';
+		suivi.innerHTML += '<button id="show" class="btn" onclick="OpenPopup('+r.id+')" tabindex="-1">✎</button>';
+		suivi.innerHTML += '<button id="delete" class="btn warning" onclick="DeleteRappel('+r.id+')" tabindex="-1"><span id="delete">&#128465</span></button>';
+		rappelList.appendChild(suivi);
+	})
+	RappelsCascade()
+}
+function CheckSended(){
+	notes.forEach((r,i)=>{
+		if(new Date(r.dateRappel).getTime() <= new Date().getTime() && !r.sended){
+			console.log(r)
+			//SendNotification("Rappel", r.note, r.id)
+			playNotificationSound();
+			r.sended = true
+			notes[i] = r
+			SaveRappels()
+		}
+	})
+}/**/
+function RappelsCascade(){
+	var cascadeArray = [];
+	rappelList.querySelectorAll(".suivi").forEach(element =>{
+		let date = element.querySelector(".time").value;
+		cascadeArray.push({
+			"suivi": new Date(date),
+			"suiviElement": element
+		});
+	});
+	rappelList.innerHTML = "";
+	//---------------------------ORDER BY TIME
+	cascadeArray.sort((a, b)=>{
+		return a.suivi - b.suivi;
+	});
+	//---------------------------RE-ORDER AND ADD COLOR TO LIST SUIVI
+	var hoursNow = new Date();
+//		hoursNow.setHours(15, 30, 00)//-----------------------FOR TEST 15h30
+	cascadeArray.forEach(element=>{
+		rappelList.appendChild(element.suiviElement);
+		var diff = TimeDifference(hoursNow, element.suivi);
+		var textBackground = rappelList.lastChild.querySelector("textarea");
+		if(diff.hh < 1){//---------------------------------------------dans moins d'1 heure jaune
+			textBackground.style.background = "#cebb32";
+			if(diff.mm < 9 || diff.hh < 0){//--------------------------dans moins de 10 minutes orange
+				textBackground.style.background = "#ce7732";
+				if(diff.hh < 0){//-------------------------------------dépassé rouge
+					textBackground.style.background = "#ce3232";
+				}
+			}
+		} else {
+			textBackground.style.background = "none";
+		}
+	});
+}
+//-------------------------------------------------------------- END RAPPELS
+function TimeDifference(time1, time2){
+	var diff = time2 - time1;
+	function getTime(millisecondsToTime){
+		var hh = Math.floor(millisecondsToTime / 1000 / 60 / 60);
+		millisecondsToTime -= hh * 1000 * 60 * 60;
+		var mm = Math.floor(millisecondsToTime / 1000 / 60);
+		millisecondsToTime -= mm * 1000 * 60;
+		var ss = Math.floor(millisecondsToTime / 1000);
+		millisecondsToTime -= ss * 1000;
+		
+		return {hh,mm,ss};
+	}
+	return getTime(diff);
+}
+	</script>
+</html>

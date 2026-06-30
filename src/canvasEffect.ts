@@ -151,6 +151,8 @@ export class Space{
         const color:Color = page.star.color;
         const angle:number = Math.random() * 360;
         const duration:number = Math.random() * 50;
+        const height:number = Math.max(Math.random() * 50, 45);
+        const width:number = Math.max(Math.random() * 30, 20);
         const el = document.createElement("div");
         el.classList.add("eruption");
         el.style.background = `
@@ -167,6 +169,8 @@ export class Space{
             0 0 30px rgba(${color.r},${color.g},${color.b},0.3),
             0 0 60px rgba(${color.r},${color.g},${color.b},0.15)
             `;
+        el.style.height = `${height}%`;
+        el.style.width = `${width}%`;
         el.style.rotate = `${angle}deg`;
         el.style.animationDelay = `${delay}s`;
         el.style.animationDuration = `${duration}s`;

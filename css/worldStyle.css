@@ -50,7 +50,7 @@ canvas{
     width: 20%;
     height: 50%;
     border-radius: 50%;
-    animation: eruption 25s;
+    animation: eruption;
 }
 @keyframes eruption {
     0%{
@@ -63,19 +63,18 @@ canvas{
         opacity: 1;
     }
     75%{
-        opacity: 0;
+        opacity: 1;
         transform: 
             translate(0%, -135%) 
             scale(1.2);
     }
-    95%{
+    80%{
         opacity: 0;
-        transform: 
-            scale(0);
     }
     100%{
         opacity: 0;
         transform: 
-            scale(0);
+            translate(0%, -80%) 
+            scale(.2);
     }
 }

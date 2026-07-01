@@ -87,7 +87,8 @@ export class Page{
                         return `<a href="${block.link}" target="_blank" class="link">${block.name}</a>`;
                     }
                 case DataType.image:
-                    return `<img src="${block.link}"style="max-width:${block.scale}px;max-height:${block.scale}px;"
+                    // return `<img src="${block.link}"style="max-width:${block.scale}px;max-height:${block.scale}px;"
+                    return `<img src="${block.link}"style="width:${block.scale}px;"
                      loading="lazy" alt="${block.name}">`;
                 case DataType.icon:
                     return `<i class="${block.name}"></i>`;

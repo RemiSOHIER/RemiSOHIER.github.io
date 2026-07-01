@@ -135,7 +135,7 @@ section{
             0 0 5px #4d88f7,
             0 0 10px #4d88f7;
     >#content{
-        padding: 5px;
+        padding: 10px;
         height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
@@ -173,7 +173,7 @@ section{
     transition: max-height 0.5s ease;
 }
 .dataTextContent.open {
-    max-height: 1000px;
+    max-height: 2500px;
 }
 .content{
     display: flex;

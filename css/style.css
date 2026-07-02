@@ -104,8 +104,8 @@ iframe{
     overflow: hidden;
     /* overflow-x: hidden;
     overflow-y: auto; */
-    scale:  0;
-    transition: all 0.5s;
+    scale: 0;
+    transition: all 0.5s ease;
 }
 #eclipse{
     pointer-events: none;

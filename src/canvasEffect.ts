@@ -4,11 +4,15 @@ export class Space{
     canvas!:HTMLCanvasElement;
     ctx:CanvasRenderingContext2D;
     starChunks:Chunk<Star>[] = [];
-    private generationQueue:Vector2[] = [];
-    private chunkPerFrame:number = 5;
-    private updateOnProgress:boolean = false;
     chunkSize:number = 1000;
     starNumberByChunks:number = 200;
+
+    private generationQueue:Vector2[] = [];
+    private chunkPerFrame:number = 2;
+    private updateOnProgress:boolean = false;
+    
+    private fps:number = 50;
+    private updateInterval:number = 1000 / this.fps;
     constructor(canvas:HTMLCanvasElement){
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -224,9 +228,9 @@ export class Space{
     private update = ()=>{
         this.ProcessGenerationQueue();
         this.PreRender();
-        // console.log("update")
         if(this.updateOnProgress || this.generationQueue.length > 0){
-            requestAnimationFrame(this.update);
+            // requestAnimationFrame(this.update);
+            setTimeout(() => this.update(), this.updateInterval);
         }
     };
     /** @description Boucle de pré-rendu filtre et éxecute le rendu 

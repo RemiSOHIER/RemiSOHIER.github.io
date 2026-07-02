@@ -119,6 +119,17 @@ export class Vector extends Vector2{
         this.z = z ?? 0;
     }
 }
+export function CalculateDistance(p1:Vector2|Vector, p2:Vector2|Vector):number {
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    // Si les deux objets sont des instances de Vector (3D), on calcule en 3D
+    if (p1 instanceof Vector && p2 instanceof Vector) {
+        const dz = p2.z - p1.z;
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+    // Sinon, calcul 2D classique
+    return Math.sqrt(dx * dx + dy * dy);
+}
 
 export function AddVector(v1:Vector2|Vector, v2:Vector2|Vector){
     if(v1 instanceof Vector || v2 instanceof Vector){

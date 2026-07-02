@@ -1,4 +1,4 @@
-import { Vector2, Vector, Page, Star, Color, Data } from "./objects";
+import { Vector2, Vector, CalculateDistance, Page, Star, Color, Data } from "./objects";
 import { Space } from "./canvasEffect"
 
 import accueilHTML from "./partials/accueil.html?raw";
@@ -12,7 +12,6 @@ const lorem = `Lorem ipsum dolor sit amet consectetur
             error sint aperiam hic fugit eius nulla, 
             ipsum repellat.`;
 const destinationsBar = document.getElementById("destinationsBar")
-const app = document.getElementById("app");
 const world = document.getElementById("world");
 const pageBalise = document.getElementById("page");
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -29,9 +28,6 @@ link.type = "image/svg+xml";
 link.href = svgUrl;
 //#endregion Icon
 
-if (app) {
-    // app.innerHTML = `<h1>${title}</h1>`;
-}
 if(world){
     globalThis.world = world;
 }
@@ -73,7 +69,7 @@ async function Init() {
     globalThis.pages = pagesFound;
     let errorPage = new Page();
     errorPage.name = "Erreur";
-    errorPage.star = new Star(new Vector(0, -3000, 0), 30000, 1, new Color(), 75);
+    errorPage.star = new Star(new Vector(100, -200, 0), 0, 1, new Color(), 50);
     errorPage.star.Init();
     // pages.push(errorPage);
     globalThis.pages.push(errorPage)
@@ -115,15 +111,16 @@ function GoTo(openInstantly:boolean = false):void{
     const pageFound:Page|undefined = pages.find((p:Page)=>p.name.toLowerCase() == pageName.toLowerCase());
     if(pageFound) {
         globalThis.actualPage = pageFound;
+        if(actualPage.name == "Accueil"){
+            document.title = title;
+        }else{
+            document.title = title+" - "+actualPage.name;
+        }
     }else{
         const pageError:Page|undefined = pages.find((p:Page)=>p.name.toLowerCase() == "erreur");
         if(!pageError) throw new Error("La page d'érreur est introuvable");
-        actualPage = pageError;
-    }
-    if(actualPage.name == "Accueil"){
-        document.title = title;
-    }else{
-        document.title = title+" - "+actualPage.name;
+        globalThis.actualPage = pageError;
+        document.title = title+" - page introuvable";
     }
     if(openInstantly){
         OpenPageAnimation();
@@ -133,7 +130,8 @@ function GoTo(openInstantly:boolean = false):void{
         ClosePageAnimation(()=>{
             if(!pageBalise) return;
             pageBalise.innerHTML = "";
-            spaceBackground.GoToWorldCoordinateAnimation(actualPage.star.position, 3000, ()=>{
+            const distance:number = CalculateDistance(cameraPosition, actualPage.star.position) / 10 + 500;
+            spaceBackground.GoToWorldCoordinateAnimation(actualPage.star.position, distance, ()=>{
                 OpenPageAnimation();
                 UpdatePageData();
             });
@@ -170,6 +168,12 @@ async function UpdatePageData():Promise<void>{
     if(datas != null){
         titleHtml = `<div id="title">${actualPage.name}</div>`;
         contentHtml += actualPage.GetDataString(datas as Data[]);
+    }else if(actualPage.name == "Erreur"){
+        let pageName:string = decodeURIComponent(window.location.hash).replace(/^#\/?/, "");
+        titleHtml = `<div id="title">${actualPage.name}</div>`;
+        contentHtml += `<div class="warn" style="display:flex;justify-content:center;">
+                <h2>La page "${pageName}" est introuvable</h2>
+            </div>`;
     }else{
         titleHtml = `<div id="title" class="warn">La page ${actualPage.name} est en cours d'élaboration</div>`;
         contentHtml += lorem

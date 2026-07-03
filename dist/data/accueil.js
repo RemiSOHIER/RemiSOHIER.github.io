@@ -32,8 +32,8 @@ export default[
         </p><p>
         Gamedev:\\n
         • {{type:svg,link:mdi:unreal-engine}}Unreal engine 5.7\\n
-        • {{type:svg,link:icon-park:material}}Blueprints (Unreal engine)\\n
-        • {{type:svg,link:ph:blueprint}}Materials shader (Unreal engine)\\n
+        • {{type:svg,link:ph:blueprint}}Blueprints (Unreal engine)\\n
+        • {{type:svg,link:icon-park:material}}Materials shader (Unreal engine)\\n
         • {{type:svg,link:devicon:cplusplus}}C++ (Unreal engine)
         </p></div>`
     },

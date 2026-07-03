@@ -130,7 +130,10 @@ function GoTo(openInstantly:boolean = false):void{
         ClosePageAnimation(()=>{
             if(!pageBalise) return;
             pageBalise.innerHTML = "";
-            const distance:number = CalculateDistance(cameraPosition, actualPage.star.position) / 10 + 500;
+            const rawdistance:number = CalculateDistance(cameraPosition, actualPage.star.position);
+            const minDelay:number = 500;
+            const constante:number = 15;
+            const distance:number = Math.sqrt(rawdistance) * minDelay / constante;
             spaceBackground.GoToWorldCoordinateAnimation(actualPage.star.position, distance, ()=>{
                 OpenPageAnimation();
                 UpdatePageData();

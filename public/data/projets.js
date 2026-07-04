@@ -3,7 +3,7 @@ export default[
         isClosable: true,
         title: `{{
             type:image,
-            link:https://raw.githubusercontent.com/RemiSOHIER/RTS-4X-Spatial/refs/heads/main/screenshots/2026-06-30/menu.png,
+            link:/projets/ProjetRTS_4X_Spatial/Bannière.png,
             scale:100
         }} Projet RTS 4X Spatial`,
         text: `{{type:svg,link:tabler:universe}}
@@ -25,12 +25,12 @@ export default[
         l’avancement du projet.\\n\\n
         {{
             type:image,
-            link:https://raw.githubusercontent.com/RemiSOHIER/RTS-4X-Spatial/refs/heads/main/screenshots/2026-06-30/systeme.png,
+            link:/projets/ProjetRTS_4X_Spatial/systeme.png,
             scale:400
         }}
         {{
             type:image,
-            link:https://raw.githubusercontent.com/RemiSOHIER/RTS-4X-Spatial/refs/heads/main/screenshots/2026-06-30/menu.png,
+            link:/projets/ProjetRTS_4X_Spatial/menu.png,
             scale:400
         }}\\n\\n
         {{

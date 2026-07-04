@@ -36,7 +36,7 @@ export default[
         {{
             type:link,
             name:Voir la roadmap,
-            link:https://github.com/RemiSOHIER/RTS-4X-Spatial
+            link:https://highfalutin-stem-ecc.notion.site/Roadmap-Projet-RTS-4X-spatial-39329cbaf31d8088b1b6d018a9ed641e
         }}`
     },
     {

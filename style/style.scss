@@ -1,3 +1,5 @@
+@use './variables.scss' as *;
+
 html{
     background: #050816;
     height: 100%;
@@ -5,7 +7,8 @@ html{
     overflow: hidden;
 }
 body {
-    color: white;
+    color: $text;
+    font-family: $font-body;
     font-family: Arial, sans-serif;
     margin: 0;
     height: 100%;
@@ -42,21 +45,8 @@ a:link,
 a:visited,
 a:active,
 a:hover{
-    background-color: #659bff;
     text-decoration: none;
     color: white;
-}
-.link{
-    display: inline-block;
-    padding: 5px;
-    border-radius: 10px;
-    transition: all 1s ease;
-}
-.link:hover{
-    background-color: #97bafc;
-    box-shadow:
-            0 0 15px #4d88f7,
-            0 0 30px #4d88f7;
 }
 iconify-icon{
     margin: 5px;
@@ -68,7 +58,7 @@ iconify-icon{
     margin: 0px;
     padding: 5px;
     height: 50px;
-    border-radius: 0px 0px 10px 0px;
+    border-radius: 0px 0px 20px 0px;
     >iconify-icon{
         font-size: 25px;
     }
@@ -79,31 +69,21 @@ button, .btn{
     padding: 10px;
     border: none;
     border-radius: 10px;
-    background-color: #659bff;
+    background-color: $btnBG;
     transition: all 1s ease;
 }
 button:hover, .btn:hover{
     cursor: pointer;
-    background-color: #97bafc;
+    background-color: $btnHoverBG;
     box-shadow:
-            0 0 15px #4d88f7,
-            0 0 30px #4d88f7;
+            0 0 15px $btnShadowColor,
+            0 0 30px $btnShadowColor;
 }
 #destinationsBar{
-    background-color: rgba(33, 50, 126, 0.5);
+    background-color: $background;
     backdrop-filter: blur(3px);
     border-radius: 20px 20px 0px 0px;
-    >button{
-        margin: 10px;
-    }
-}
-#destinationPageName{
-    background-color: rgba(33, 50, 126, 0.5);
-    backdrop-filter: blur(3px);
-    padding: 10px 20px;
-    margin-top: 0px;
-    font-size: 25px;
-    border-radius: 0px 0px 20px 20px;
+    padding: 10px;
 }
 #menu{
     scale: 0;
@@ -128,7 +108,8 @@ button:hover, .btn:hover{
     >#destinationPanelList{
         display: flex;
         flex-direction: column;
-        background-color: #21327e;
+        background-color: $background;
+        backdrop-filter: blur(3px);
         padding: 30px;
         border-radius: 50px 0px;
         >button{
@@ -149,7 +130,8 @@ button:hover, .btn:hover{
     overflow: hidden;
     backdrop-filter: blur(3px);
     overflow-y: auto;
-    background-color: rgba(5, 8, 22, 0.3);
+    scroll-behavior: smooth;
+    background-color: $background;
     scale: 0;
     transition: all 0.5s ease;
 }
@@ -160,16 +142,25 @@ section{
     margin: 20% 0px;
     padding: 20px;
     /* background-color: #0b153e9b; */
-    background-color: #1f2e6c9b;
-    border-radius: 50px 0px;
+    background-color: $cardBG;
+    // border: 1px solid $cardBG;
+    border-radius: 50px 10px;
     line-height: 20px;
     letter-spacing: 1px;
     word-spacing: 1px;
 }
+@media (max-width: 768px){
+    section{
+        margin: 30% 0px;
+    }
+}
+section.top{
+    border-radius: 100px 20px;
+    padding: 30px;
+}
 section.left {
     align-self: flex-start;
 }
-
 section.right {
     align-self: flex-end;
 }
@@ -177,23 +168,56 @@ section.right {
     section {
         scale: 1;
         animation: zoom linear both;
+        animation-duration: 1ms;
+        animation-timeline: view();
+        animation-range: entry 0% cover 100%;
+    }
+    section.left {
+        align-self: flex-start;
+        animation: leftTransition linear both,
+        zoom linear both;
+        animation-duration: 1ms;
+        animation-timeline: view();
+        animation-range: entry 0% cover 100%;
+    }
+    section.right {
+        align-self: flex-end;
+        animation: rightTransition linear both,
+        zoom linear both;
+        animation-duration: 1ms;
         animation-timeline: view();
         animation-range: entry 0% cover 100%;
     }
     @keyframes zoom {
-        0% { scale: 0.5; }
+        0% { scale: 0.25; }
         25% { scale: 1; }
         75% { scale: 1; }
-        100% { scale: 0.5; }
+        100% { scale: 0.25; }
+    }
+    @keyframes leftTransition {
+        0% { translate: -200% 0%; }
+        30% { translate: 0% 0%; }
+        70% { translate: 0% 0%; }
+        100% { translate: -200% 0%; }
+    }
+    @keyframes rightTransition {
+        0% { translate: 200% 0%; }
+        30% { translate: 0% 0%; }
+        70% { translate: 0% 0%; }
+        100% { translate: 200% 0%; }
     }
 }
+h1, h2, h3, h4{user-select: none;}
 h1{
+    font-family: $font-title;
     padding: 20px;
 }
 h3{
-    background-color: #21327e;
-    padding: 20px;
-    border-radius: 20px;
+    font-family: $font-title;
+    background-color: $titleBG;
+    padding: 10px 20px;
+    border: 1px solid $titleBorder;
+    border-radius: 50px;
 }
 h4{
     text-decoration: underline;
@@ -202,6 +226,7 @@ h4{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 li{
     margin: 5px;
@@ -232,7 +257,4 @@ li{
 /* hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #666;
-}
-@media (max-width: 768px){
-    
 }

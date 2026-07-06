@@ -13,7 +13,6 @@ const title = "Rémi SOHIER";
 
 const destinationPanel = document.getElementById("destinationPanel")
 const destinationPanelList = document.getElementById("destinationPanelList")
-const destinationPageName = document.getElementById("destinationPageName")
 const destinationsBar = document.getElementById("destinationsBar")
 const menu = document.getElementById("menu")
 const world = document.getElementById("world");
@@ -46,9 +45,6 @@ let pageIsOpen:boolean = false;
 //Optimized for [-10000:10000] coordinates maximum
 globalThis.cameraPosition = new Vector2();
 const spaceBackground:Space = new Space(canvas);
-if(canvas){
-    // spaceBackground.GenerateRandomStars();
-}
 
 Init();
 
@@ -105,6 +101,38 @@ async function Init() {
     });
 }
 
+function UpdageDestinationBar():void{
+    if(!destinationPanelList || !destinationsBar || !menu) return;
+    destinationPanelList.innerHTML = "";
+    destinationsBar.innerHTML = "";
+    if(isMobile()){
+        menu.style.scale = "1"
+    }else{
+        menu.style.scale = "0"
+    }
+    pages.forEach((p:Page, index:number)=>{
+        if(actualPage.name != p.name && p.name != "Erreur"){
+            if(isMobile()){
+                destinationPanelList.innerHTML += `<button tabindex="${index}"
+                onClick="Route('${p.name}')">${p.name}</button>`;
+            }else{
+                menu
+                destinationsBar.innerHTML += `<button tabindex="${index}"
+                onClick="Route('${p.name}')">${p.name}</button>`;
+            }
+        }
+    })
+}
+
+async function UpdatePageData():Promise<void>{
+    if(!pageHtml || !world) return;
+    if(actualPage.html != undefined){
+        pageHtml.innerHTML = actualPage.html;
+    }
+    UpdageDestinationBar();
+}
+
+//#region ROUTE
 /** @description Permet de définir le chemin via l'url,
  * utilisation d'une url hashée afin d'avoir toutes les url qui 
  * retournent le "index.html" pour une github page */
@@ -144,8 +172,6 @@ function GoTo(openInstantly:boolean = false):void{
         globalThis.actualPage = pageError;
         document.title = title+" - page introuvable";
     }
-    // if(!destinationPageName) return;
-    // destinationPageName.innerHTML = actualPage.name;
     CloseMenu(false);
     if(openInstantly){
         OpenPageAnimation();
@@ -166,38 +192,9 @@ function GoTo(openInstantly:boolean = false):void{
         });
     }
 }
+//#endregion ROUTE
 
-function UpdageDestinationBar():void{
-    if(!destinationPanelList || !destinationsBar || !menu) return;
-    destinationPanelList.innerHTML = "";
-    destinationsBar.innerHTML = "";
-    if(isMobile()){
-        menu.style.scale = "1"
-    }else{
-        menu.style.scale = "0"
-    }
-    pages.forEach((p:Page, index:number)=>{
-        if(actualPage.name != p.name && p.name != "Erreur"){
-            if(isMobile()){
-                destinationPanelList.innerHTML += `<button tabindex="${index}"
-                onClick="Route('${p.name}')">${p.name}</button>`;
-            }else{
-                menu
-                destinationsBar.innerHTML += `<button tabindex="${index}"
-                onClick="Route('${p.name}')">${p.name}</button>`;
-            }
-        }
-    })
-}
-
-async function UpdatePageData():Promise<void>{
-    if(!pageHtml || !world) return;
-    if(actualPage.html != undefined){
-        pageHtml.innerHTML = actualPage.html;
-    }
-    UpdageDestinationBar();
-}
-
+//#region ANIMATIONS
 function ToggleMenu():void{
     if(!destinationPanel) return;
     if(destinationPanel.style.scale == "1"){
@@ -251,3 +248,4 @@ function OpenPageAnimation(onComplete?:()=>void):void{
     }, 500);
 }
 globalThis.OpenPageAnimation = OpenPageAnimation;
+//#endregion ANIMATIONS

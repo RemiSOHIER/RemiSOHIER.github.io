@@ -234,7 +234,8 @@ export class Space{
     /** @description Boucle de pré-rendu filtre et éxecute le rendu 
      * des chunks proches */
     private PreRender():void{
-        this.ctx.fillStyle = "#050816";
+        this.ctx.fillStyle = "#000";
+        // this.ctx.fillStyle = "#050816";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         const currentChunkX = Math.floor(cameraPosition.x / this.chunkSize*0.25);
         const currentChunkY = Math.floor(cameraPosition.y / this.chunkSize*0.25);

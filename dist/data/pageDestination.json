@@ -10,6 +10,16 @@
         }
     },
     {
+        "name": "Erreur",
+        "star": {
+            "position": {"x": 100, "y": -200},
+            "temperature": 0,
+            "intensity": 1,
+            "color": {"r": 0,"g": 0, "b": 0},
+            "radius": 50
+        }
+    },
+    {
         "name": "Parcours",
         "star": {
             "position": {"x": 3000, "y": 2000},
@@ -47,6 +57,16 @@
             "intensity": 1,
             "color": {"r": 0,"g": 0, "b": 0},
             "radius": 300
+        }
+    },
+    {
+        "name": "Contact",
+        "star": {
+            "position": {"x": 9700, "y": -9700},
+            "temperature": 30000,
+            "intensity": 1,
+            "color": {"r": 0,"g": 0, "b": 0},
+            "radius": 100
         }
     }
 ]

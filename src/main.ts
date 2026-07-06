@@ -1,20 +1,26 @@
-import { Vector2, Vector, CalculateDistance, Page, Star, Color, Data } from "./objects";
+import { Vector2, Vector, CalculateDistance, Page, Star, Color } from "./objects";
 import { Space } from "./canvasEffect"
 
-import accueilHTML from "./partials/accueil.html?raw";
-import contactHTML from "./partials/contact.html?raw";
+import accueilHTML from "./pages/accueil.html?raw";
+import erreurHTML from "./pages/erreur.html?raw";
+import parcoursHTML from "./pages/parcours.html?raw";
+import projetsHTML from "./pages/projets.html?raw";
+import reseauxHTML from "./pages/réseaux.html?raw";
+import mentionLegaleHTML from "./pages/mentions-légales.html?raw";
+import contactHTML from "./pages/contact.html?raw";
 
 const title = "Rémi SOHIER";
-const lorem = `Lorem ipsum dolor sit amet consectetur 
-            adipisicing elit. Dolores voluptates sed 
-            molestiae nam placeat consequatur temporibus 
-            culpa repellendus quasi blanditiis, minima 
-            error sint aperiam hic fugit eius nulla, 
-            ipsum repellat.`;
+
+const destinationPanel = document.getElementById("destinationPanel")
+const destinationPanelList = document.getElementById("destinationPanelList")
+const destinationPageName = document.getElementById("destinationPageName")
 const destinationsBar = document.getElementById("destinationsBar")
+const menu = document.getElementById("menu")
 const world = document.getElementById("world");
-const pageBalise = document.getElementById("page");
+const pageHtml = document.getElementById("page");
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+
+const isMobile = ():boolean=>{return window.matchMedia("(max-width: 768px)").matches;};
 
 //#region Icon
 const svgUrl = `https://api.iconify.design/material-symbols/planet-outline.svg?color=${encodeURIComponent("#659bff")}`;
@@ -31,8 +37,10 @@ link.href = svgUrl;
 if(world){
     globalThis.world = world;
 }
-if(destinationsBar){
-    globalThis.destinationsBar = destinationsBar;
+if(destinationPanel){
+    destinationPanel.addEventListener("click", ()=>{
+        CloseMenu();
+    })
 }
 let pageIsOpen:boolean = false;
 //Optimized for [-10000:10000] coordinates maximum
@@ -42,11 +50,6 @@ if(canvas){
     // spaceBackground.GenerateRandomStars();
 }
 
-// let camera:Vector2 = new Vector2();
-// let targetCamera:Vector2 = new Vector2();//actually not used
-
-// let pages:Page[] = []
-// let page:Page = new Page();
 Init();
 
 async function Init() {
@@ -63,33 +66,52 @@ async function Init() {
             p.star.radius
         );
         page.star.Init();
+        switch (page.name) {
+            case "Accueil":
+                page.html = accueilHTML;
+                break;
+            case "Erreur":
+                page.html = erreurHTML;
+                break;
+            case "Parcours":
+                page.html = parcoursHTML;
+                break;
+            case "Projets":
+                page.html = projetsHTML;
+                break;
+            case "Réseaux":
+                page.html = reseauxHTML;
+                break;
+            case "Mentions-légales":
+                page.html = mentionLegaleHTML;
+                break;
+            case "Contact":
+                page.html = contactHTML;
+                break;
+            default:
+                break;
+        }
         return page;
     }));
-    // pages = pagesFound;
     globalThis.pages = pagesFound;
-    let errorPage = new Page();
-    errorPage.name = "Erreur";
-    errorPage.star = new Star(new Vector(100, -200, 0), 0, 1, new Color(), 50);
-    errorPage.star.Init();
-    // pages.push(errorPage);
-    globalThis.pages.push(errorPage)
-    // page = Object.assign(new Page(), pages[1]);
-    if(!destinationsBar) return;
+    if(!destinationPanelList || !destinationsBar) return;
+    destinationPanelList.innerHTML = "";
     destinationsBar.innerHTML = "";
     if(!world) return;
-    // InitWorld();
-    // window.addEventListener("resize", ()=>{
-    //     InitWorld();
-    // })
     GoTo(true);
     spaceBackground.GenerateStarPages();
+    window.addEventListener("resize", () => {
+        UpdageDestinationBar();
+    });
 }
 
 /** @description Permet de définir le chemin via l'url,
  * utilisation d'une url hashée afin d'avoir toutes les url qui 
  * retournent le "index.html" pour une github page */
-function Route(pageName:string, openInstantly:boolean = false){
-    if(window.location.hash.replace(/^#\/?/, "") != pageName){
+function Route(pageName:string, openInstantly:boolean = false):void{
+    if(pageName.includes("http") || pageName.includes("projet")){
+        window.open(pageName, "_blank")
+    }else if(window.location.hash.replace(/^#\/?/, "") != pageName){
         if(pageName == "Accueil"){
             pageName = "";
             // history.pushState({}, "", "");
@@ -122,14 +144,17 @@ function GoTo(openInstantly:boolean = false):void{
         globalThis.actualPage = pageError;
         document.title = title+" - page introuvable";
     }
+    // if(!destinationPageName) return;
+    // destinationPageName.innerHTML = actualPage.name;
+    CloseMenu(false);
     if(openInstantly){
         OpenPageAnimation();
         spaceBackground.GoToWorldCoordinateAnimation(actualPage.star.position, 0);
         UpdatePageData();
     } else {
         ClosePageAnimation(()=>{
-            if(!pageBalise) return;
-            pageBalise.innerHTML = "";
+            if(!pageHtml) return;
+            pageHtml.innerHTML = "";
             const rawdistance:number = CalculateDistance(cameraPosition, actualPage.star.position);
             const minDelay:number = 500;
             const constante:number = 15;
@@ -143,68 +168,55 @@ function GoTo(openInstantly:boolean = false):void{
 }
 
 function UpdageDestinationBar():void{
-    if(!destinationsBar) return;
+    if(!destinationPanelList || !destinationsBar || !menu) return;
+    destinationPanelList.innerHTML = "";
     destinationsBar.innerHTML = "";
+    if(isMobile()){
+        menu.style.scale = "1"
+    }else{
+        menu.style.scale = "0"
+    }
     pages.forEach((p:Page, index:number)=>{
         if(actualPage.name != p.name && p.name != "Erreur"){
-            destinationsBar.innerHTML += `<button tabindex="${index}"
-            onClick="Route('${p.name}')">${p.name}</button>`;
+            if(isMobile()){
+                destinationPanelList.innerHTML += `<button tabindex="${index}"
+                onClick="Route('${p.name}')">${p.name}</button>`;
+            }else{
+                menu
+                destinationsBar.innerHTML += `<button tabindex="${index}"
+                onClick="Route('${p.name}')">${p.name}</button>`;
+            }
         }
     })
 }
 
 async function UpdatePageData():Promise<void>{
-    if(!pageBalise || !world) return;
-    const left = window.innerWidth / 2 - actualPage.star.radius / 2
-    const top = window.innerHeight / 2 - actualPage.star.radius / 2
-    let datas:Data[]|null = null;
-    try {
-        const module = await import(`/data/${actualPage.name.toLowerCase()}.js`);
-        datas = module.default ?? null;
-    } catch (e) {
-        datas = null;
+    if(!pageHtml || !world) return;
+    if(actualPage.html != undefined){
+        pageHtml.innerHTML = actualPage.html;
     }
-    let titleHtml:string = "";
-    let contentHtml:string = "";
-    // if(page.name == "Accueil") contentHtml = accueilHTML;
-    if(actualPage.name == "Mentions-légales") contentHtml = contactHTML;
-    if(datas != null){
-        titleHtml = `<div id="title">${actualPage.name}</div>`;
-        contentHtml += actualPage.GetDataString(datas as Data[]);
-    }else if(actualPage.name == "Erreur"){
-        let pageName:string = decodeURIComponent(window.location.hash).replace(/^#\/?/, "");
-        titleHtml = `<div id="title">${actualPage.name}</div>`;
-        contentHtml += `<div class="warn" style="display:flex;justify-content:center;">
-                <h2>La page "${pageName}" est introuvable</h2>
-            </div>`;
-    }else{
-        titleHtml = `<div id="title" class="warn">La page ${actualPage.name} est en cours d'élaboration</div>`;
-        contentHtml += lorem
-    }
-    pageBalise.innerHTML = `
-    <div id="eclipse" style="top:${top}px;left:${left}px;
-        width: ${actualPage.star.radius}px;
-        height: ${actualPage.star.radius}px;">
-    </div>
-    ${titleHtml}
-    <section>
-        <div id="content">
-            ${contentHtml}
-        </div>
-    </section>`;
-    InitPageEvent();
     UpdageDestinationBar();
 }
 
-function InitPageEvent(){
-    document.querySelectorAll(".dataTextTitle").forEach(title => {
-    title.addEventListener("click", () => {
-        const content = title.nextElementSibling;
-        if (content) {
-            content.classList.toggle("open");
-        }
-    });
-});
+function ToggleMenu():void{
+    if(!destinationPanel) return;
+    if(destinationPanel.style.scale == "1"){
+        CloseMenu();
+    }else{
+        OpenMenu();
+    }
+}
+globalThis.ToggleMenu = ToggleMenu;
+
+function CloseMenu(openPage:boolean = true):void{
+    if(!destinationPanel) return;
+    destinationPanel.style.scale = "0";
+    if(openPage) OpenPageAnimation();
+}
+function OpenMenu():void{
+    if(!destinationPanel) return;
+    destinationPanel.style.scale = "1";
+    ClosePageAnimation();
 }
 
 function TogglePageAnimation(){
@@ -218,19 +230,21 @@ globalThis.TogglePageAnimation = TogglePageAnimation;
 
 /** @description Effectue l'animation de fermeture de la page */
 function ClosePageAnimation(onComplete?:()=>void):void{
-    if (!pageBalise) return;
-    pageBalise.style.scale = "0";
+    if (!pageHtml) return;
+    pageHtml.style.scale = "0"
     pageIsOpen = false;
     setTimeout(() => {
         if (onComplete) onComplete();
+        pageHtml.style.pointerEvents = "none";
     }, 500);
 }
 globalThis.ClosePageAnimation = ClosePageAnimation;
 
 /** @description Effectue l'animation d'ouverture de la page */
 function OpenPageAnimation(onComplete?:()=>void):void{
-    if(!pageBalise) return;
-    pageBalise.style.scale = "1"
+    if(!pageHtml) return;
+    pageHtml.style.pointerEvents = "all";
+    pageHtml.style.scale = "1"
     pageIsOpen = true;
     setTimeout(() => {
         if (onComplete) onComplete();

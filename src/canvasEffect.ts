@@ -45,7 +45,6 @@ export class Space{
         duration:number = 1200,
         onComplete?:()=>void
     ):void{
-        destinationsBar.style.display = "none";
         this.updateOnProgress = true;
         this.update();
         if(duration == 0){
@@ -72,7 +71,6 @@ export class Space{
             } else {
                 if (onComplete) onComplete();
                 this.updateOnProgress = false;
-                destinationsBar.style.display = "block";
             }
         }
         requestAnimationFrame(animate);
